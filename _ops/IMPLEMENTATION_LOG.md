@@ -135,4 +135,23 @@ No Phase 2 implementation work was started in this audit turn.
 
 **Phase 2D result:** PASS WITH RISKS
 
+## Phase 2E - Data Content Quality Audit (2026-06-10)
+
+| Step | Time | Action | Status |
+|---|---|---|---|
+| 1 | 2026-06-10T00:05 | Verified that the required Phase 2D local artifacts for `uts_vlc` and `duyet_legal_instruct` exist before any audit work began. | PASS |
+| 2 | 2026-06-10T00:08 | Reviewed current Phase 2 docs, ops status files, manifests, quality reports, and normalized outputs. | PASS |
+| 3 | 2026-06-10T00:15 | Created `scripts/audit_ingested_content.py` as a read-only local audit utility that reads only JSONL/manifests and writes output under `artifacts/`. | PASS |
+| 4 | 2026-06-10T00:16 | Added `tests/test_audit_ingested_content.py` covering pure helper functions only. | PASS |
+| 5 | 2026-06-10T00:18 | Ran `python -m compileall src scripts -q`. | PASS |
+| 6 | 2026-06-10T00:18 | Ran `python -m pytest tests -v` - **86/86 PASS**. | PASS |
+| 7 | 2026-06-10T00:19 | Ran `python scripts/audit_ingested_content.py --input-dir artifacts/phase_2d_controlled_ingestion --report-out artifacts/phase_2e_content_audit_report.json`. | PASS |
+| 8 | 2026-06-10T00:20 | Measured UTS findings: `300/300` rows typed as `other`, `300/300` missing `document_number`, `0/300` empty text, `299/300` rows contain multiple article markers. | PASS |
+| 9 | 2026-06-10T00:21 | Measured Duyet findings: normalized `text` matches the user turn in `1000/1000` rows, assistant answer remains only in `raw_metadata` in `1000/1000` rows, `935/1000` assistant answers contain citation-like signals. | PASS |
+| 10 | 2026-06-10T00:22 | Confirmed cross-source provenance completeness and zero cross-source duplicate `record_id`, `source_id`, and normalized text overlaps. | PASS |
+| 11 | 2026-06-10T00:24 | Created `docs/PHASE_2E_DATA_CONTENT_AUDIT.md` and updated Phase 2 status/risk docs. | PASS |
+| 12 | 2026-06-10T00:25 | Ran `git status --short` and confirmed no files under `artifacts/` are staged. | PASS |
+
+**Phase 2E result:** PASS WITH RISKS
+
 

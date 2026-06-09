@@ -102,5 +102,13 @@ These metrics must be measured before any bulk ingestion is approved:
   - Documents created: `ATTRIBUTION.md`, `DATA_USE_POLICY.md`, `BULK_INGESTION_GATE.md`.
 - Phase 2 bulk download: **NO-GO** (unchanged)
 - Phase 2D implementation: **COMPLETE — PASS WITH RISKS**. Controlled pilot successfully pulled `uts_vlc` and `duyet_legal_instruct` up to 1000 records. `th1nhng0_legal_documents` deferred due to HF dataset config issues. No generated data tracked.
-- Phase 2E implementation: **DO NOT START**. Wait for explicit instructions.
+- Phase 2E implementation: **COMPLETE - PASS WITH RISKS**
+  - `UTS_VLC`: content is viable as a document-level legal corpus candidate only. Current normalized output does not preserve article-level metadata.
+  - `duyet_legal_instruct`: normalized `text` correctly remains the user query; assistant answers remain in `raw_metadata` only. This source is still generated supervision, not legal ground truth.
+  - Downstream readiness:
+    - RAG corpus readiness: `PASS WITH RISKS` for `UTS_VLC` only
+    - SFT dataset readiness: `BLOCKED`
+    - Evaluation dataset readiness: `BLOCKED`
+    - Public release readiness: `BLOCKED`
+  - Phase 3: **DO NOT START**.
 

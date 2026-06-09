@@ -1,6 +1,6 @@
 # Phase Status
 
-**Current phase:** Phase 1 - Data Source Audit and Scaffolding  
+**Current phase:** Phase 2 - Data Pipeline and Processing  
 **Current verdict:** PASS WITH RISKS
 
 ## Phase gates
@@ -9,7 +9,7 @@
 |---|---|---|
 | Phase 0: Project bootstrap structure | PASS | 2026-06-09 |
 | Phase 1: Data source audit and scaffolding | PASS WITH RISKS | 2026-06-09 |
-| Phase 2: Data pipeline and processing | NOT STARTED - BULK DOWNLOAD BLOCKED | - |
+| Phase 2: Data pipeline and processing | PASS WITH RISKS | 2026-06-10 |
 | Phase 3: RAG knowledge base | NOT STARTED | - |
 | Phase 4: Fine-tuning | NOT STARTED | - |
 | Phase 5: Agent orchestration | NOT STARTED | - |
@@ -91,3 +91,34 @@
 - All 1300 ingested records passed the quality gates with 100% success rate.
 - Optional ingestion for `th1nhng0_legal_documents` failed (HF config required) and deferred.
 - **Phase 2E (QA/RAG/Fine-Tuning): DO NOT START**
+
+## Phase 2E - Data Content Quality Audit
+
+**Date:** 2026-06-10
+**Verdict:** PASS WITH RISKS
+
+- Required Phase 2D artifacts for `uts_vlc` and `duyet_legal_instruct` were present locally and audited in place.
+- `UTS_VLC` findings:
+  - `300/300` normalized rows are typed as `other`.
+  - `300/300` rows are missing `document_number`.
+  - `0/300` rows have empty or near-empty text.
+  - `299/300` rows contain multiple article markers, so article parsing is possible, but only from the long-form text field.
+- `duyet_legal_instruct` findings:
+  - Normalized `text` matches the user turn in `1000/1000` rows.
+  - Assistant answers remain in `raw_metadata` in `1000/1000` rows.
+  - `935/1000` assistant answers contain citation-like signals, but this does not establish correctness.
+  - `1000/1000` rows are missing `title` and `document_number`.
+- Cross-source findings:
+  - Provenance fields are complete across all `1300` audited records.
+  - Cross-source duplicate `record_id`: `0`
+  - Cross-source duplicate `source_id`: `0`
+  - Cross-source exact duplicate normalized text: `0`
+- Readiness matrix:
+  - RAG corpus readiness: **PASS WITH RISKS** for `UTS_VLC` only
+  - SFT dataset readiness: **BLOCKED**
+  - Evaluation dataset readiness: **BLOCKED**
+  - Public release readiness: **BLOCKED**
+- Allowed next steps:
+  - `UTS_VLC`: article/chunk parsing design only
+  - `duyet_legal_instruct`: SFT filtering review only
+- **Phase 3 remains NOT STARTED. Do not generate QA. Do not fine-tune. Do not build RAG/vector indexes.**
