@@ -31,3 +31,17 @@
 **Issue:** `data/processed/sample_legal_articles.jsonl` was gitignored, breaking the audit validation command on a fresh clone.  
 **Fix:** Moved synthetic fixture to `tests/fixtures/synthetic_legal_articles.jsonl` (git-tracked). Updated default path in `scripts/inspect_data_source_sample.py` and all doc references.  
 **Result:** PASS
+
+## Phase 2A — Sample-only ingestion scaffold
+
+**Date:** 2026-06-09
+**Verdict:** PASS
+- `src/vilegal/ingestion/` package created (5 modules).
+- `scripts/ingest_hf_sample.py` CLI created.
+- `tests/test_ingestion.py` — 44 new tests, all passing.
+- `tests/fixtures/malformed_legal_articles.jsonl` created.
+- Offline dry-run: 3 records, 0 rejected, quality gate PASS, all metrics 100%.
+- `artifacts/` confirmed gitignored — no generated data committed.
+- **Bulk download: BLOCKED** (unchanged).
+- **Phase 2B: DO NOT START** until human approves bulk-download gates in `docs/PHASE_2_PRE_AUDIT.md`.
+

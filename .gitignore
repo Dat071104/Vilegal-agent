@@ -226,3 +226,8 @@ models/*
 !models/README.md
 .env
 *.log
+
+# Phase 2A generated artifacts (never commit these)
+artifacts/
+.cache/
+hf_cache/

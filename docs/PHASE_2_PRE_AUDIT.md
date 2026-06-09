@@ -1,8 +1,8 @@
 # Phase 2 Pre-Audit
 
-**Date:** 2026-06-09  
-**Status:** PRE-AUDIT ONLY  
-**Implementation status:** Not started
+**Date:** 2026-06-09
+**Status:** PHASE 2A IN PROGRESS
+**Implementation status:** Sample-only ingestion scaffold implemented. Offline fixture dry-run: PASS.
 
 ## Objective
 
@@ -93,6 +93,7 @@ These metrics must be measured before any bulk ingestion is approved:
 
 ## Recommendation
 
-- Phase 2 bulk download: **NO-GO**
-- Phase 2 sample-only ingestion planning: **GO**
-- Phase 2 implementation: **DO NOT START YET**
+- Phase 2A sample-only scaffold: **COMPLETE — PASS**
+- Phase 2A offline dry-run: **PASS** (3 records, quality gate PASS, all metrics 100%)
+- Phase 2 bulk download: **NO-GO** (unchanged)
+- Phase 2B implementation: **DO NOT START** until human approves bulk-download gates above.

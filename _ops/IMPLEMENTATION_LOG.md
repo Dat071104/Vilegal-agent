@@ -57,3 +57,31 @@ No Phase 2 implementation work was started in this audit turn.
 
 **Reproducibility patch result:** PASS
 
+## Phase 2A — Sample-only ingestion scaffold (2026-06-09)
+
+**Branch:** `phase/01-data-source-audit` (continuing)
+
+| Step | Time | Action | Status |
+|---|---|---|---|
+| 1 | 2026-06-09T16:17 | Surveyed repo state: src/vilegal/, tests/, fixtures, .gitignore. | ✅ |
+| 2 | 2026-06-09T16:18 | Summarized all intended file changes (Chat First rule observed). | ✅ |
+| 3 | 2026-06-09T16:18 | Updated `.gitignore` — added `artifacts/`, `.cache/`, `hf_cache/`. | ✅ |
+| 4 | 2026-06-09T16:18 | Created `src/vilegal/ingestion/__init__.py`. | ✅ |
+| 5 | 2026-06-09T16:18 | Created `src/vilegal/ingestion/source_registry.py` — 5 audited sources, hard cap 100. | ✅ |
+| 6 | 2026-06-09T16:19 | Created `src/vilegal/ingestion/provenance.py` — manifest builder and writer. | ✅ |
+| 7 | 2026-06-09T16:19 | Created `src/vilegal/ingestion/normalizers.py` — raw→canonical normalizer. | ✅ |
+| 8 | 2026-06-09T16:19 | Created `src/vilegal/ingestion/quality_checks.py` — 8-metric quality report with threshold gate. | ✅ |
+| 9 | 2026-06-09T16:20 | Created `src/vilegal/ingestion/hf_sample_loader.py` — offline fixture + HF streaming loader. | ✅ |
+| 10 | 2026-06-09T16:20 | Created `scripts/ingest_hf_sample.py` — CLI with --source, --max-records, --output-dir, --offline-fixture. | ✅ |
+| 11 | 2026-06-09T16:20 | Created `tests/fixtures/malformed_legal_articles.jsonl` — 3 synthetic invalid records. | ✅ |
+| 12 | 2026-06-09T16:21 | Created `tests/test_ingestion.py` — 44 tests across 8 test classes. | ✅ |
+| 13 | 2026-06-09T16:22 | Ran `python -m compileall src scripts -q` — PASS. | ✅ |
+| 14 | 2026-06-09T16:22 | Ran `python -m pytest tests -v` — **68/68 tests PASS** (24 Phase 1 + 44 Phase 2A). | ✅ |
+| 15 | 2026-06-09T16:22 | Ran `python scripts/inspect_data_source_sample.py tests/fixtures/synthetic_legal_articles.jsonl` — PASS. | ✅ |
+| 16 | 2026-06-09T16:22 | Ran `python scripts/ingest_hf_sample.py --source uts_vlc --max-records 3 --offline-fixture tests/fixtures/synthetic_legal_articles.jsonl --output-dir artifacts/phase_2a_test` — PASS, quality gate PASS. | ✅ |
+| 17 | 2026-06-09T16:22 | Ran `git status --short` — confirmed `artifacts/` gitignored, only Phase 2A files untracked. | ✅ |
+| 18 | 2026-06-09T16:23 | Updated `docs/PHASE_2_PRE_AUDIT.md`, `_ops/IMPLEMENTATION_LOG.md`, `_ops/PHASE_STATUS.md`. | ✅ |
+
+**Phase 2A result:** PASS
+
+
