@@ -120,6 +120,19 @@ No Phase 2 implementation work was started in this audit turn.
 
 **Phase 2C result:** PASS
 
+## Phase 2D — Controlled local ingestion (2026-06-09)
 
+| Step | Time | Action | Status |
+|---|---|---|---|
+| 1 | 2026-06-09T16:45 | Manually checked all 7 gates in `docs/BULK_INGESTION_GATE.md`. | ✅ |
+| 2 | 2026-06-09T16:46 | Increased `MAX_RECORDS_HARD_CAP` from 100 to 1000 in `src/vilegal/ingestion/source_registry.py` and updated `tests/test_ingestion.py`. | ✅ |
+| 3 | 2026-06-09T16:46 | Ran `python -m compileall src scripts -q` and `python -m pytest tests -v` — PASS. | ✅ |
+| 4 | 2026-06-09T16:47 | Ran controlled ingestion for `uts_vlc` with `--max-records 300`. PASS. | ✅ |
+| 5 | 2026-06-09T16:47 | Ran controlled ingestion for `duyet_legal_instruct` with `--max-records 1000`. PASS. | ✅ |
+| 6 | 2026-06-09T16:48 | Attempted optional ingestion for `th1nhng0_legal_documents`. Failed due to missing dataset config and deferred. | 🔍 DEFERRED |
+| 7 | 2026-06-09T16:49 | Generated `docs/PHASE_2D_CONTROLLED_INGESTION_REPORT.md` | ✅ |
+| 8 | 2026-06-09T16:49 | Verified no artifacts/cache staged via `git status --short`. | ✅ |
+
+**Phase 2D result:** PASS WITH RISKS
 
 

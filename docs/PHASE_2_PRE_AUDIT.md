@@ -101,5 +101,6 @@ These metrics must be measured before any bulk ingestion is approved:
 - Phase 2C human gate pack: **COMPLETE — PASS**
   - Documents created: `ATTRIBUTION.md`, `DATA_USE_POLICY.md`, `BULK_INGESTION_GATE.md`.
 - Phase 2 bulk download: **NO-GO** (unchanged)
-- Phase 2D implementation: **DO NOT START** until human reviewer completes checklist in `docs/BULK_INGESTION_GATE.md`.
+- Phase 2D implementation: **COMPLETE — PASS WITH RISKS**. Controlled pilot successfully pulled `uts_vlc` and `duyet_legal_instruct` up to 1000 records. `th1nhng0_legal_documents` deferred due to HF dataset config issues. No generated data tracked.
+- Phase 2E implementation: **DO NOT START**. Wait for explicit instructions.
 

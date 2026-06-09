@@ -80,5 +80,14 @@
 - `docs/PHASE_2C_HUMAN_GATE_REPORT.md` created summarizing status.
 - **Phase 2D (Bulk Ingestion): BLOCKED**. Must not start until the human reviewer completes the checklist in `docs/BULK_INGESTION_GATE.md`.
 
+## Phase 2D — Controlled local ingestion
 
+**Date:** 2026-06-09
+**Verdict:** PASS WITH RISKS
 
+- All 7 gates in `docs/BULK_INGESTION_GATE.md` checked.
+- `MAX_RECORDS_HARD_CAP` updated to 1000 and tests passing.
+- Controlled ingestion run for `uts_vlc` (300 records) and `duyet_legal_instruct` (1000 records). 
+- All 1300 ingested records passed the quality gates with 100% success rate.
+- Optional ingestion for `th1nhng0_legal_documents` failed (HF config required) and deferred.
+- **Phase 2E (QA/RAG/Fine-Tuning): DO NOT START**

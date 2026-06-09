@@ -125,8 +125,8 @@ class TestSourceRegistry:
 # ---------------------------------------------------------------------------
 
 class TestMaxRecordsCap:
-    def test_hard_cap_value_is_100(self):
-        assert MAX_RECORDS_HARD_CAP == 100
+    def test_hard_cap_value_is_1000(self):
+        assert MAX_RECORDS_HARD_CAP == 1000
 
     def test_valid_value_passes_through(self):
         assert enforce_max_records(50) == 50
@@ -142,13 +142,17 @@ class TestMaxRecordsCap:
             enforce_max_records(-5)
 
     def test_above_cap_is_clamped(self, capsys):
-        result = enforce_max_records(200)
+        result = enforce_max_records(2000)
         assert result == MAX_RECORDS_HARD_CAP
         captured = capsys.readouterr()
         assert "Clamping" in captured.out
 
+    def test_default_remains_conservative(self):
+        from vilegal.ingestion.source_registry import DEFAULT_MAX_RECORDS
+        assert DEFAULT_MAX_RECORDS == 50
+
     def test_above_cap_prints_warning_with_source(self, capsys):
-        enforce_max_records(999, "uts_vlc")
+        enforce_max_records(1999, "uts_vlc")
         captured = capsys.readouterr()
         assert "uts_vlc" in captured.out
 

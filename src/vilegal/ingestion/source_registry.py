@@ -13,7 +13,7 @@ from typing import Optional
 
 # Hard cap enforced everywhere — a human must change this constant
 # deliberately after completing the Phase 2B bulk-download gates.
-MAX_RECORDS_HARD_CAP: int = 100
+MAX_RECORDS_HARD_CAP: int = 1000
 DEFAULT_MAX_RECORDS: int = 50
 
 

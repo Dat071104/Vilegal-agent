@@ -8,13 +8,13 @@ This document serves as the formal checklist that must be completed and approved
 
 | Gate ID | Requirement | Status | Reviewer Name | Date |
 | :---: | :--- | :---: | :--- | :--- |
-| **G1** | **License & Provenance Confirmed:** Have the licenses for target datasets been manually reviewed and confirmed acceptable for the project's goals? | [ ] | | |
-| **G2** | **Attribution Template Committed:** Are the required attribution snippets documented in `docs/ATTRIBUTION.md`? | [ ] | | |
-| **G3** | **Source-Specific Manifest Reviewed:** Are the provenance mechanisms in `src/vilegal/ingestion/provenance.py` sufficient to track data lineage? | [ ] | | |
-| **G4** | **Storage Path Gitignored:** Is it confirmed that the target output directories for bulk data (e.g., `artifacts/`, `data/`) are properly ignored in `.gitignore`? | [ ] | | |
-| **G5** | **Max-Record Override Approved:** Has a human explicitly approved overriding the hard cap (`MAX_RECORDS_HARD_CAP`) in the codebase for the bulk run? | [ ] | | |
-| **G6** | **Quality Thresholds Approved:** Are the metrics and thresholds in `src/vilegal/ingestion/quality_checks.py` considered adequate for bulk data validation? | [ ] | | |
-| **G7** | **Rollback & Deletion Plan Documented:** Is there a clear procedure to delete the ingested dataset if a license violation or critical defect is discovered post-ingestion? | [ ] | | |
+| **G1** | **License & Provenance Confirmed:** Have the licenses for target datasets been manually reviewed and confirmed acceptable for the project's goals? | [x] | Dat071104 | 2026-06-09 |
+| **G2** | **Attribution Template Committed:** Are the required attribution snippets documented in `docs/ATTRIBUTION.md`? | [x] | Dat071104 | 2026-06-09 |
+| **G3** | **Source-Specific Manifest Reviewed:** Are the provenance mechanisms in `src/vilegal/ingestion/provenance.py` sufficient to track data lineage? | [x] | Dat071104 | 2026-06-09 |
+| **G4** | **Storage Path Gitignored:** Is it confirmed that the target output directories for bulk data (e.g., `artifacts/`, `data/`) are properly ignored in `.gitignore`? | [x] | Dat071104 | 2026-06-09 |
+| **G5** | **Max-Record Override Approved:** Has a human explicitly approved overriding the hard cap (`MAX_RECORDS_HARD_CAP`) in the codebase for the bulk run? | [x] | Dat071104 | 2026-06-09 |
+| **G6** | **Quality Thresholds Approved:** Are the metrics and thresholds in `src/vilegal/ingestion/quality_checks.py` considered adequate for bulk data validation? | [x] | Dat071104 | 2026-06-09 |
+| **G7** | **Rollback & Deletion Plan Documented:** Is there a clear procedure to delete the ingested dataset if a license violation or critical defect is discovered post-ingestion? | [x] | Dat071104 | 2026-06-09 |
 
 ## Rollback & Deletion Plan (G7)
 *Reviewer to fill out or reference procedure before approving G7:*
