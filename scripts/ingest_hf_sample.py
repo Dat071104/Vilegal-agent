@@ -35,6 +35,10 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+# Suppress Windows symlink warning from huggingface_hub (cosmetic only, not a security risk)
+import os
+os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS_WARNING", "1")
+
 # Ensure src/ is on the path when run from the repo root
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
@@ -126,8 +130,12 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--hf-split",
-        default="train",
-        help="HF dataset split to use when streaming (default: 'train').",
+        default=None,
+        help=(
+            "HF dataset split to use when streaming. "
+            "Defaults to the source's registered default_split "
+            "(e.g. '2026' for UTS_VLC, 'train' for others)."
+        ),
     )
     return parser.parse_args()
 
@@ -160,6 +168,9 @@ def main() -> int:
     output_dir: Path = args.output_dir
     offline_fixture: Path | None = args.offline_fixture
 
+    # Resolve HF split: explicit CLI flag > source registry default > 'train'
+    hf_split: str = args.hf_split or source_meta.default_split
+
     # --- Load records ---
     retrieved_at = datetime.now(tz=timezone.utc).isoformat()
     try:
@@ -167,7 +178,7 @@ def main() -> int:
             hf_handle=source_meta.hf_handle,
             max_records=max_records,
             offline_fixture=offline_fixture,
-            hf_split=args.hf_split,
+            hf_split=hf_split,
         )
     except (FileNotFoundError, ValueError, RuntimeError, ImportError) as exc:
         print(f"\nError loading records: {exc}", file=sys.stderr)

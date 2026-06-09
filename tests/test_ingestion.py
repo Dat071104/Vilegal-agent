@@ -242,6 +242,50 @@ class TestNormalizer:
         for field in required:
             assert field in normalized, f"Missing required field: {field}"
 
+    def test_conversations_format_extracts_user_turn(self):
+        """duyet/vietnamese-legal-instruct schema: conversations list → user turn → text."""
+        raw = {
+            "qa_type": "explain_simple",
+            "source_id": "67007",
+            "document_type": "Quyết định",
+            "conversations": [
+                {"role": "system", "content": "Bạn phiên dịch pháp luật."},
+                {"role": "user", "content": "Điều 1. Phạm vi điều chỉnh: Quy định về quyền cơ bản."},
+                {"role": "assistant", "content": "Điều này quy định quyền cơ bản của công dân."},
+            ],
+        }
+        normalized = _normalize(raw)
+        assert "Phạm vi điều chỉnh" in normalized["text"]
+        assert normalized["source_id"] == "67007"
+
+    def test_conversations_format_assistant_not_promoted(self):
+        """Assistant response must NOT become the primary text (not legal ground truth)."""
+        raw = {
+            "qa_type": "explain_simple",
+            "source_id": "99999",
+            "conversations": [
+                {"role": "system", "content": "Hướng dẫn."},
+                {"role": "user", "content": "Luật số 91/2015/QH13, Điều 1."},
+                {"role": "assistant", "content": "Đây là câu trả lời tổng hợp."},
+            ],
+        }
+        normalized = _normalize(raw)
+        # text must be the user turn, not the assistant turn
+        assert "Luật số 91" in normalized["text"]
+        assert "tổng hợp" not in normalized["text"]
+
+    def test_conversations_format_no_user_turn_raises(self):
+        """If conversations has no user turn at all, must raise ValueError."""
+        raw = {
+            "source_id": "X",
+            "conversations": [
+                {"role": "system", "content": "Hướng dẫn."},
+                {"role": "assistant", "content": "Câu trả lời."},
+            ],
+        }
+        with pytest.raises(ValueError, match="no usable text"):
+            _normalize(raw)
+
 
 # ---------------------------------------------------------------------------
 # 5. Provenance manifest tests
@@ -411,3 +455,57 @@ class TestNoBulkDataPath:
         """synthetic_example must never trigger an HF download."""
         src = get_source("synthetic_example")
         assert src.hf_handle is None
+
+
+# ---------------------------------------------------------------------------
+# 9. Phase 2B alias resolution tests
+# ---------------------------------------------------------------------------
+
+class TestSourceAliases:
+    """Phase 2B: CLI-friendly aliases resolve to the canonical registry entries."""
+
+    def test_duyet_legal_instruct_alias_resolves(self):
+        src = get_source("duyet_legal_instruct")
+        assert src.source_id == "viet_legal_instruct"
+        assert src.hf_handle == "duyet/vietnamese-legal-instruct"
+
+    def test_th1nhng0_legal_documents_alias_resolves(self):
+        src = get_source("th1nhng0_legal_documents")
+        assert src.source_id == "viet_legal_docs"
+        assert src.hf_handle == "th1nhng0/vietnamese-legal-documents"
+
+    def test_canonical_ids_still_work_after_alias_patch(self):
+        """Original canonical IDs must not break."""
+        for canonical in ("uts_vlc", "viet_legal_instruct", "viet_legal_docs",
+                          "viet_legal_qa", "synthetic_example"):
+            src = get_source(canonical)
+            assert src.source_id == canonical
+
+    def test_alias_preserves_license(self):
+        src_alias = get_source("duyet_legal_instruct")
+        src_canonical = get_source("viet_legal_instruct")
+        assert src_alias.license == src_canonical.license
+        assert src_alias.attribution_required == src_canonical.attribution_required
+
+    def test_alias_preserves_bulk_blocked(self):
+        src = get_source("duyet_legal_instruct")
+        assert src.bulk_download_blocked is True
+
+    def test_unknown_alias_raises(self):
+        with pytest.raises(KeyError, match="Unknown source"):
+            get_source("completely_unknown_alias_xyz")
+
+    def test_uts_vlc_default_split_is_2026(self):
+        """UTS_VLC uses year-based splits; default must not be 'train'."""
+        src = get_source("uts_vlc")
+        assert src.default_split == "2026"
+
+    def test_other_sources_default_split_is_train(self):
+        """Sources other than UTS_VLC should default to 'train'."""
+        for src_id in ("viet_legal_instruct", "viet_legal_docs", "synthetic_example"):
+            src = get_source(src_id)
+            assert src.default_split == "train", (
+                f"Expected default_split='train' for '{src_id}', got '{src.default_split}'"
+            )
+
+

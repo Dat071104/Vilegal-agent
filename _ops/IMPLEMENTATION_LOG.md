@@ -84,4 +84,27 @@ No Phase 2 implementation work was started in this audit turn.
 
 **Phase 2A result:** PASS
 
+## Phase 2B — Online smoke test (2026-06-09)
+
+| Step | Time | Action | Status |
+|---|---|---|---|
+| 1 | 2026-06-09T16:26 | Surveyed registry; identified source ID mismatch (CLI uses `duyet_legal_instruct`, registry had `viet_legal_instruct`). | ✅ |
+| 2 | 2026-06-09T16:26 | Added `ALIASES` dict and updated `get_source()` — backward-compatible. | ✅ |
+| 3 | 2026-06-09T16:26 | Added `TestSourceAliases` test class — 8 tests. | ✅ |
+| 4 | 2026-06-09T16:27 | `python -m pytest tests -v` — 76/76 PASS. | ✅ |
+| 5 | 2026-06-09T16:28 | Ran UTS_VLC online smoke test — failed: split `train` not valid, only year splits available (`2026`, etc.). | 🔍 DISCOVERY |
+| 6 | 2026-06-09T16:29 | Added `default_split` field to `SourceMeta`; set `default_split='2026'` for UTS_VLC. Updated CLI to use `source_meta.default_split` when `--hf-split` not set. | ✅ |
+| 7 | 2026-06-09T16:29 | Added 2 split tests. `python -m pytest tests -v` — 76/76 PASS. | ✅ |
+| 8 | 2026-06-09T16:30 | Re-ran UTS_VLC online smoke test — 10/10 normalized, quality gate PASS. | ✅ |
+| 9 | 2026-06-09T16:31 | Ran duyet_legal_instruct online smoke test — 10 rejected: schema uses `conversations` list, not flat `text`. | 🔍 DISCOVERY |
+| 10 | 2026-06-09T16:33 | Added conversations-format extractor to `normalizers.py`. Added 3 normalizer tests. `python -m pytest tests -v` — 79/79 PASS. | ✅ |
+| 11 | 2026-06-09T16:33 | Re-ran duyet_legal_instruct smoke — 10/10 normalized, quality gate PASS. | ✅ |
+| 12 | 2026-06-09T16:34 | Confirmed Duyet provenance_manifest.json has `license: CC-BY-4.0`, `attribution_required: true`, `bulk_download_blocked: true`. | ✅ |
+| 13 | 2026-06-09T16:34 | Ran `git status --short` — `artifacts/` and `.cache/` correctly gitignored; no generated data staged. | ✅ |
+| 14 | 2026-06-09T16:35 | Updated `docs/PHASE_2_PRE_AUDIT.md`, `_ops/IMPLEMENTATION_LOG.md`, `_ops/PHASE_STATUS.md`. | ✅ |
+| 15 | - | th1nhng0/vietnamese-legal-documents — DEFERRED (not required; Phase 2B mandatory sources covered). | DEFERRED |
+
+**Phase 2B result:** PASS WITH DISCOVERIES
+
+
 

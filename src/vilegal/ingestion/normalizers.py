@@ -77,14 +77,28 @@ def normalize_record(
         retrieved_at = datetime.now(tz=timezone.utc).isoformat()
 
     # --- Core text extraction ---
+    # Priority: flat text field → conversations format (duyet instruct) → raise
     text = _safe_str(
         raw.get("text")
         or raw.get("article_text")
         or raw.get("content")
-        or raw.get("output")  # instruction-pair format
+        or raw.get("output")  # instruction-pair flat format
     )
+
+    if not text:
+        # conversations format: [{"role": "system"|"user"|"assistant", "content": "..."}]
+        # Used by duyet/vietnamese-legal-instruct.
+        # Map: user turn → text.  assistant turn → raw_metadata only (NOT legal ground truth).
+        convos = raw.get("conversations")
+        if isinstance(convos, list):
+            for turn in convos:
+                if isinstance(turn, dict) and turn.get("role") == "user":
+                    text = _safe_str(turn.get("content"))
+                    break
+
     if not text:
         raise ValueError("Record has no usable text field.")
+
 
     # --- Source provenance ---
     source_id = _safe_str(

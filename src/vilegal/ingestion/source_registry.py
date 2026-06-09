@@ -54,6 +54,9 @@ class SourceMeta:
     notes: str = ""
     """Audit notes and caveats."""
 
+    default_split: str = "train"
+    """Default HF dataset split (e.g. 'train', '2026'). Override with --hf-split."""
+
 
 # ---------------------------------------------------------------------------
 # Registry
@@ -77,6 +80,7 @@ REGISTRY: dict[str, SourceMeta] = {
             "Does NOT cover decrees, circulars, or decisions. "
             "NEEDS MANUAL REVIEW: provenance and upstream relicensing basis."
         ),
+        default_split="2026",
     ),
     "viet_legal_instruct": SourceMeta(
         source_id="viet_legal_instruct",
@@ -156,15 +160,31 @@ REGISTRY: dict[str, SourceMeta] = {
     ),
 }
 
+# ---------------------------------------------------------------------------
+# CLI-friendly aliases (added in Phase 2B)
+# Allows --source duyet_legal_instruct as well as --source viet_legal_instruct.
+# All aliases map to canonical REGISTRY keys.
+# ---------------------------------------------------------------------------
+
+ALIASES: dict[str, str] = {
+    "duyet_legal_instruct":    "viet_legal_instruct",
+    "duyet_viet_legal_instruct": "viet_legal_instruct",
+    "th1nhng0_legal_documents": "viet_legal_docs",
+    "viet_legal_documents":    "viet_legal_docs",
+}
+
+
 
 def get_source(source_id: str) -> SourceMeta:
-    """Return the SourceMeta for a given source_id, raising KeyError if unknown."""
-    if source_id not in REGISTRY:
-        available = ", ".join(sorted(REGISTRY.keys()))
+    """Return the SourceMeta for a given source_id or alias, raising KeyError if unknown."""
+    resolved = ALIASES.get(source_id, source_id)
+    if resolved not in REGISTRY:
+        all_ids = sorted(set(list(REGISTRY.keys()) + list(ALIASES.keys())))
+        available = ", ".join(all_ids)
         raise KeyError(
             f"Unknown source '{source_id}'. Available sources: {available}"
         )
-    return REGISTRY[source_id]
+    return REGISTRY[resolved]
 
 
 def enforce_max_records(requested: int, source_id: str = "") -> int:

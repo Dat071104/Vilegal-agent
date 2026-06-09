@@ -94,6 +94,10 @@ These metrics must be measured before any bulk ingestion is approved:
 ## Recommendation
 
 - Phase 2A sample-only scaffold: **COMPLETE — PASS**
-- Phase 2A offline dry-run: **PASS** (3 records, quality gate PASS, all metrics 100%)
+- Phase 2B online smoke test: **COMPLETE — PASS WITH DISCOVERIES**
+  - UTS_VLC: 10/10 normalized, quality gate PASS. Uses year-based splits (e.g. `2026`), not `train`.
+  - duyet/vietnamese-legal-instruct: 10/10 normalized after conversations-format normalizer fix. CC-BY-4.0 attribution confirmed and preserved.
+  - th1nhng0/vietnamese-legal-documents: DEFERRED (not required to attempt; resources saved).
 - Phase 2 bulk download: **NO-GO** (unchanged)
-- Phase 2B implementation: **DO NOT START** until human approves bulk-download gates above.
+- Phase 2C implementation: **DO NOT START** until human approves bulk-download gates above.
+

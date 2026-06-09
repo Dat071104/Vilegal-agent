@@ -45,3 +45,28 @@
 - **Bulk download: BLOCKED** (unchanged).
 - **Phase 2B: DO NOT START** until human approves bulk-download gates in `docs/PHASE_2_PRE_AUDIT.md`.
 
+## Phase 2B — Online smoke test
+
+**Date:** 2026-06-09
+**Verdict:** PASS WITH DISCOVERIES
+
+| Source | Records | Normalized | Rejected | Quality Gate | Notes |
+|---|---|---|---|---|---|
+| `undertheseanlp/UTS_VLC` | 10 | 10 | 0 | ✅ PASS | MIT license. Year-based splits (uses `2026`). Clean legal corpus. |
+| `duyet/vietnamese-legal-instruct` | 10 | 10 | 0 | ✅ PASS | CC-BY-4.0, attribution preserved. Conversations schema normalized. NOT legal ground truth. |
+| `th1nhng0/vietnamese-legal-documents` | — | — | — | DEFERRED | Not required for Phase 2B gate. |
+
+**Key discoveries documented:**
+1. UTS_VLC uses year-based HF splits (`2026`, `2026_01`, `2023`, `2021`), not `train`. Fixed via `default_split` in registry.
+2. `duyet/vietnamese-legal-instruct` uses a `conversations` list schema. Normalizer updated to extract the `user` turn as primary text. Assistant turn is NOT promoted to legal ground truth.
+
+**Code changes triggered by smoke test:**
+- `source_registry.py` — `ALIASES` dict + `default_split` field
+- `normalizers.py` — conversations format extractor
+- `scripts/ingest_hf_sample.py` — `--hf-split` defaults to source `default_split`
+- `tests/test_ingestion.py` — 3 new tests; total now 79/79 passing
+
+**Bulk download: BLOCKED** (unchanged)
+**Phase 2C: DO NOT START** until human approves bulk-download gates.
+
+
