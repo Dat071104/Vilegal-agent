@@ -69,4 +69,16 @@
 **Bulk download: BLOCKED** (unchanged)
 **Phase 2C: DO NOT START** until human approves bulk-download gates.
 
+## Phase 2C — Human Gate Pack
+
+**Date:** 2026-06-09
+**Verdict:** PASS
+
+- `docs/ATTRIBUTION.md` created with MIT and CC-BY-4.0 templates.
+- `docs/DATA_USE_POLICY.md` created defining git tracking rules (no raw legal data).
+- `docs/BULK_INGESTION_GATE.md` created establishing the 7 human-review gates.
+- `docs/PHASE_2C_HUMAN_GATE_REPORT.md` created summarizing status.
+- **Phase 2D (Bulk Ingestion): BLOCKED**. Must not start until the human reviewer completes the checklist in `docs/BULK_INGESTION_GATE.md`.
+
+
 

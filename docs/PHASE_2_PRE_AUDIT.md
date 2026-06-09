@@ -98,6 +98,8 @@ These metrics must be measured before any bulk ingestion is approved:
   - UTS_VLC: 10/10 normalized, quality gate PASS. Uses year-based splits (e.g. `2026`), not `train`.
   - duyet/vietnamese-legal-instruct: 10/10 normalized after conversations-format normalizer fix. CC-BY-4.0 attribution confirmed and preserved.
   - th1nhng0/vietnamese-legal-documents: DEFERRED (not required to attempt; resources saved).
+- Phase 2C human gate pack: **COMPLETE — PASS**
+  - Documents created: `ATTRIBUTION.md`, `DATA_USE_POLICY.md`, `BULK_INGESTION_GATE.md`.
 - Phase 2 bulk download: **NO-GO** (unchanged)
-- Phase 2C implementation: **DO NOT START** until human approves bulk-download gates above.
+- Phase 2D implementation: **DO NOT START** until human reviewer completes checklist in `docs/BULK_INGESTION_GATE.md`.
 
