@@ -1,7 +1,15 @@
 # Risk Register
 
-*This register will track identified risks and assumptions.*
+This register tracks the current Phase 1 audit risks and assumptions.
 
-| ID | Date | Risk/Assumption | Mitigation/Action | Status |
-|---|---|---|---|---|
-| R01 | 2026-06-09 | Availability of structured Vietnamese legal data is assumed to be sufficient for training. | Conduct thorough data audit in Phase 1. | Open |
+| ID | Date | Phase | Risk or assumption | Classification | Mitigation or action | Status |
+|---|---|---|---|---|---|---|
+| R01 | 2026-06-09 | P0 | Structured Vietnamese legal data exists in enough quantity to support later experiments. | ASSUMPTION | Completed the Phase 1 audit before approving any ingestion work. | CLOSED |
+| R02 | 2026-06-09 | P1 | `undertheseanlp/UTS_VLC` currently lists `mit` on Hugging Face, but the downstream provenance and relicensing basis for the assembled legal corpus still need human review. | NEEDS MANUAL REVIEW | Do not bulk download or redistribute from this source until provenance review is signed off. Use sample-only planning at most. | OPEN |
+| R03 | 2026-06-09 | P1 | `duyet/vietnamese-legal-instruct` currently lists `cc-by-4.0` on Hugging Face and is generated from `th1nhng0/vietnamese-legal-documents`, but the upstream relicensing chain still needs human review. | NEEDS MANUAL REVIEW | Treat as generated supervision only. Do not treat outputs as legal ground truth. Block bulk download until provenance review is complete. | OPEN |
+| R04 | 2026-06-09 | P1 | The repo does not contain official VBPL policy or API access documentation, so any claim about required registration, restricted access, or allowed automation remains unresolved here. | NEEDS MANUAL REVIEW | Keep all VBPL access claims labeled `NEEDS MANUAL REVIEW`. Do not automate VBPL acquisition from this repo state. | OPEN |
+| R05 | 2026-06-09 | P1 | Third-party legal sites may restrict automated scraping or mix official text with editorial content. | ASSUMPTION | Keep third-party scraping out of scope for this project phase. | MITIGATED |
+| R06 | 2026-06-09 | P1 | Generated instruction and QA datasets can contain factual, interpretive, or formatting errors even when their source cards are accurate. | CONFIRMED | Require source-aware filtering, sample review, and explicit "not ground truth" labeling before any future use. | OPEN |
+| R07 | 2026-06-09 | P1 | `th1nhng0/vietnamese-legal-documents` currently lists `cc-by-4.0` on Hugging Face, but the downstream right to redistribute a broad VBPL snapshot still needs human review. | NEEDS MANUAL REVIEW | Block bulk download and redistribution until provenance review is complete. | OPEN |
+| R08 | 2026-06-09 | P1 | CC-BY-4.0 attribution obligations may be missed in downstream docs, demos, or derived artifacts. | CONFIRMED | Store attribution instructions in audit docs and require attribution fields in source metadata. | OPEN |
+| R09 | 2026-06-09 | P1 | `undertheseanlp/UTS_VLC` does not cover decrees, circulars, decisions, or other sub-law instruments. | CONFIRMED | Do not claim broad legal coverage from UTS_VLC alone. Treat sub-law coverage as secondary-source only. | OPEN |
