@@ -154,4 +154,39 @@ No Phase 2 implementation work was started in this audit turn.
 
 **Phase 2E result:** PASS WITH RISKS
 
+## Phase 2F - UTS_VLC Article/Chunk Parser Design and Validation (2026-06-10)
+
+| Step | Time | Action | Status |
+|---|---|---|---|
+| 1 | 2026-06-10T00:35 | Ran `git status --short` and confirmed the Phase 2D `uts_vlc` artifact directory and required input files exist locally. | PASS |
+| 2 | 2026-06-10T00:37 | Re-read Phase 2E docs, ops files, ingestion modules, and existing audit utilities before designing the parser. | PASS |
+| 3 | 2026-06-10T00:43 | Added `src/vilegal/ingestion/article_parser.py` as a deterministic secondary parser for document-level UTS outputs. | PASS |
+| 4 | 2026-06-10T00:44 | Added `scripts/parse_uts_vlc_articles.py` with fail-closed provenance checks and artifacts-only output path enforcement. | PASS |
+| 5 | 2026-06-10T00:45 | Added `tests/test_article_parser.py` covering marker detection, split behavior, metadata preservation, fail-closed provenance, duplicate hash counting, uncertainty flags, and CLI path safety. | PASS |
+| 6 | 2026-06-10T00:46 | Fixed one marker parsing edge case where bare `Dieu 1.` lines were incorrectly treated as having inline titles. | PASS |
+| 7 | 2026-06-10T00:47 | Added a CLI test for the blocked provenance path to confirm that no candidate output is emitted when required provenance is missing. | PASS |
+| 8 | 2026-06-10T00:48 | Ran `python -m compileall src scripts -q`. | PASS |
+| 9 | 2026-06-10T00:48 | Ran `python -m pytest tests/test_article_parser.py -v` and got `12/12 PASS`. | PASS |
+| 10 | 2026-06-10T00:49 | Ran the parser against `artifacts/phase_2d_controlled_ingestion/uts_vlc`. | PASS |
+| 11 | 2026-06-10T00:50 | Measured parser output: `300` input docs, `299` with article markers, `20,393` derived candidates, `490` duplicate hashes, `87` suspicious-length candidates, `299` preamble warnings, provenance coverage `1.0`. | PASS |
+| 12 | 2026-06-10T00:52 | Recorded Phase 2F design/report findings and updated Phase 2 status and risk docs. | PASS |
+
+**Phase 2F result:** PASS WITH RISKS
+
+## Phase 2G - UTS Article Candidate Filtering Rules (2026-06-10)
+
+| Step | Time | Action | Status |
+|---|---|---|---|
+| 1 | 2026-06-10T01:00 | Verified Phase 2F candidate artifacts and source manifest were present before filtering began. | PASS |
+| 2 | 2026-06-10T01:05 | Added `src/vilegal/ingestion/article_filter.py` with deterministic review buckets and fail-closed provenance checks. | PASS |
+| 3 | 2026-06-10T01:06 | Added `scripts/filter_uts_article_candidates.py` with artifacts-only output enforcement. | PASS |
+| 4 | 2026-06-10T01:07 | Added `tests/test_article_filter.py` covering provenance failures, empty/near-empty handling, duplicate hashes, suspicious length, preamble warnings, marker uncertainty, determinism, and CLI safety. | PASS |
+| 5 | 2026-06-10T01:08 | Ran `python -m pytest tests/test_article_filter.py -v` and got `16/16 PASS`. | PASS |
+| 6 | 2026-06-10T01:08 | Ran `python -m compileall src scripts -q`. | PASS |
+| 7 | 2026-06-10T01:09 | Ran `python scripts/filter_uts_article_candidates.py --input-dir artifacts/phase_2f_uts_article_candidates --output-dir artifacts/phase_2g_uts_filtering --report-out artifacts/phase_2g_uts_filtering_report.json`. | PASS |
+| 8 | 2026-06-10T01:10 | Measured filter output: `20,393` candidates, `511` rejected, `3,249` needs review, `16,633` keep, provenance coverage `1.0`, no RAG or ground-truth promotion. | PASS |
+| 9 | 2026-06-10T01:11 | Updated Phase 2 docs and risk/status records. | PASS |
+
+**Phase 2G result:** PASS WITH RISKS
+
 

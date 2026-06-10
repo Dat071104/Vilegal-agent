@@ -122,3 +122,54 @@
   - `UTS_VLC`: article/chunk parsing design only
   - `duyet_legal_instruct`: SFT filtering review only
 - **Phase 3 remains NOT STARTED. Do not generate QA. Do not fine-tune. Do not build RAG/vector indexes.**
+
+## Phase 2F - UTS_VLC Article/Chunk Parser Design and Validation
+
+**Date:** 2026-06-10
+**Verdict:** PASS WITH RISKS
+
+- A deterministic secondary parser was added for the existing Phase 2D `UTS_VLC` normalized outputs only.
+- The parser preserves parent provenance and fails closed if required provenance fields are missing.
+- Measured Phase 2F output:
+  - `300` input documents
+  - `299` documents with article markers
+  - `1` document without article markers
+  - `20,393` derived article/chunk candidates
+  - `0` empty candidates
+  - `10` near-empty candidates
+  - `490` duplicate article hashes
+  - `87` suspicious-length candidates
+  - `299` parse warnings, all `preamble_before_first_article`
+  - `article_number_parse_success_rate = 1.0`
+  - `parent_provenance_coverage = 1.0`
+- All output candidates are explicitly marked:
+  - `is_legal_ground_truth = false`
+  - `approved_for_rag_index = false`
+- Phase boundary remains unchanged:
+  - Phase 3 is still blocked
+  - no QA generation
+  - no fine-tuning
+  - no RAG/vector index construction
+- Recommended next step: **Phase 2G filtering rules**
+
+
+## Phase 2G - UTS Article Candidate Filtering Rules
+
+**Date:** 2026-06-10
+**Verdict:** PASS WITH RISKS
+
+- Deterministic filtering and review labeling added for Phase 2F article/chunk candidates.
+- Measured filter output:
+  - `20,393` input candidates
+  - `511` rejected
+  - `3,249` needs review
+  - `16,633` keep as clean review candidates
+  - `339` duplicate hash groups
+  - `490` duplicate candidates rejected
+  - `21` near-empty candidates rejected
+  - `299` parent document warnings carried as metadata only
+  - provenance coverage preserved at `1.0`
+  - `approved_for_rag_index_true_count = 0`
+  - `is_legal_ground_truth_true_count = 0`
+- Phase 3 remains blocked.
+- Recommendation: Phase 2H is not started in this repo state; any later manual review pack requires separate approval.

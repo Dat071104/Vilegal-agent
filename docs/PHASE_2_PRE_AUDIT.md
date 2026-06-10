@@ -1,8 +1,8 @@
 # Phase 2 Pre-Audit
 
 **Date:** 2026-06-09
-**Status:** PHASE 2A IN PROGRESS
-**Implementation status:** Sample-only ingestion scaffold implemented. Offline fixture dry-run: PASS.
+**Status:** HISTORICAL PRE-AUDIT
+**Implementation status:** Superseded by Phases 2A through 2G. Sample-only ingestion scaffold, parser candidates, and filtering rules are now implemented. Offline fixture dry-run: PASS.
 
 ## Objective
 
@@ -111,4 +111,15 @@ These metrics must be measured before any bulk ingestion is approved:
     - Evaluation dataset readiness: `BLOCKED`
     - Public release readiness: `BLOCKED`
   - Phase 3: **DO NOT START**.
+- Phase 2F implementation: **COMPLETE - PASS WITH RISKS**
+  - Secondary parser created for existing document-level `UTS_VLC` outputs only.
+  - Derived article/chunk records are parser candidates only, not legal ground truth.
+  - All derived candidates are marked `approved_for_rag_index=false`.
+  - Measured run results: `20,393` candidates, `490` duplicate text hashes, `87` suspicious-length candidates, `299` preamble warnings.
+  - Recommendation: proceed only to Phase 2G filtering rules. Phase 3 remains blocked.
+- Phase 2G implementation: **COMPLETE - PASS WITH RISKS**
+  - Deterministic review-labeling layer created for Phase 2F candidates.
+  - No candidate is approved for RAG or marked as legal ground truth.
+  - Measured run results: `20,393` inputs, `212` rejected, `20,181` needs review, `0` keep candidates, `339` duplicate hash groups.
+  - Phase 3 remains blocked.
 

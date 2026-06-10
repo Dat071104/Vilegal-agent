@@ -2,27 +2,27 @@
 
 A portfolio-grade Vietnamese Legal AI Agent.
 
-**Current Status:** Phase 0 bootstrap. **NOT PRODUCTION READY**.
+**Current Status:** Phase 2 data pipeline and processing, **PASS WITH RISKS**. Phase 3 remains blocked.
 
 ## Disclaimer
 **SAFETY & LEGAL DISCLAIMER:** This is an educational project and does not provide legal advice. Do not use for actual legal compliance without consulting a qualified attorney.
 
 ## Planned Architecture
-1. **Data Pipeline:** Scraping and processing structured Vietnamese legal data.
-2. **Fine-tuned LLM:** QLoRA fine-tuning for legal domain adaptation.
-3. **LangGraph Agent:** Orchestrating complex reasoning workflows.
-4. **RAG + Citation Verification:** Retrieval-augmented generation with verified legal citations.
-5. **Evaluation:** Reproducible evaluation framework.
-6. **Deployment:** Public deployment documentation.
+1. **Data Pipeline:** Sample-only ingestion, provenance gates, and deterministic review buckets.
+2. **Fine-tuned LLM:** Blocked for now.
+3. **LangGraph Agent:** Blocked for now.
+4. **RAG + Citation Verification:** Blocked for now.
+5. **Evaluation:** Blocked for now.
+6. **Deployment:** Blocked for now.
 
 ## Data Handling Policy
 **Raw legal data and generated model artifacts are NOT committed to git.** Please refer to `data/README.md` and `.gitignore` for details.
 
 ## Phase Roadmap
-- **Phase 0:** Project Bootstrap Structure (Current)
-- **Phase 1:** Data Source Audit & Scaffolding
-- **Phase 2:** Data Pipeline & Processing
-- **Phase 3:** RAG Knowledge Base
-- **Phase 4:** Fine-tuning (QLoRA)
-- **Phase 5:** LangGraph Agent Orchestration
-- **Phase 6:** Evaluation & Deployment
+- **Phase 0:** Project Bootstrap Structure (Complete)
+- **Phase 1:** Data Source Audit & Scaffolding (Complete)
+- **Phase 2:** Data Pipeline & Processing (Complete through 2G, PASS WITH RISKS)
+- **Phase 3:** RAG Knowledge Base (Blocked)
+- **Phase 4:** Fine-tuning (QLoRA) (Blocked)
+- **Phase 5:** LangGraph Agent Orchestration (Blocked)
+- **Phase 6:** Evaluation & Deployment (Blocked)
