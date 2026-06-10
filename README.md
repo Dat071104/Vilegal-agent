@@ -31,6 +31,9 @@ A portfolio-grade Vietnamese Legal AI Agent.
 - Track A2 adds a Kaggle synthetic fine-tune demo using local synthetic split artifacts only.
   - Allowed on `phase/track-a2-kaggle-synthetic-finetune` branch only.
   - Uses `synthetic-demo` data only. Does NOT use UTS_VLC or corpus_candidate_manifest.
+  - Primary flagship target: `unsloth/Qwen2.5-7B-Instruct` QLoRA on Kaggle.
+  - Local/dev baseline: `Qwen/Qwen2.5-3B-Instruct` because the user can already run 3B locally.
+  - Smoke-test only: `Qwen/Qwen2.5-0.5B-Instruct`.
   - Does NOT unblock Track B real legal QA/SFT/RAG.
   - Full synthetic dataset (2,500 rows) remains an artifact, not committed.
   - Model/adapters/checkpoints are not committed.

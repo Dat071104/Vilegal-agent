@@ -6,15 +6,16 @@ Covers:
 2. Config disables real corpus / UTS_VLC / corpus manifest.
 3. Config allows Kaggle training but disallows local training.
 4. Config disables hub push by default.
-5. Notebook exists and is valid JSON.
-6. Notebook contains synthetic-only warning.
-7. Notebook does not contain forbidden real-corpus training references.
-8. Notebook does not contain active push_to_hub(.
-9. Validator passes on current scaffold.
-10. Validator fails on unsafe config (use_real_legal_corpus: true).
-11. Validator fails on unsafe notebook referencing corpus_candidate_manifest.
-12. Dataset packaging script can package a temporary valid split dataset.
-13. Packaged dataset card contains synthetic-only disclaimer.
+5. Config aligns the Kaggle/local/smoke model profiles with the roadmap.
+6. Notebook exists and is valid JSON.
+7. Notebook defaults to the 7B flagship target and contains synthetic-only warning.
+8. Notebook does not contain forbidden real-corpus training references.
+9. Notebook does not contain active push_to_hub(.
+10. Validator passes on current scaffold.
+11. Validator fails on unsafe config (use_real_legal_corpus: true).
+12. Validator fails on unsafe notebook referencing corpus_candidate_manifest.
+13. Dataset packaging script can package a temporary valid split dataset.
+14. Packaged dataset card contains synthetic-only disclaimer.
 """
 
 from __future__ import annotations
@@ -49,35 +50,36 @@ def _load_yaml_simple(path: Path) -> dict[str, object]:
     except ImportError:
         pass
 
-    # Fallback: parse section-based flat YAML
+    # Fallback: parse nested key/value mappings based on indentation.
     result: dict[str, object] = {}
-    current_key: str | None = None
-    current_section: dict[str, object] = {}
+    stack: list[tuple[int, dict[str, object]]] = [(-1, result)]
     with path.open("r", encoding="utf-8") as fh:
         for line in fh:
-            stripped = line.rstrip()
-            if not stripped or stripped.startswith("#"):
+            stripped = line.rstrip("\n")
+            content = stripped.strip()
+            if not content or content.startswith("#"):
                 continue
-            if not stripped.startswith(" ") and ":" in stripped:
-                k, _, v = stripped.partition(":")
-                v = v.strip().strip('"').strip("'")
-                if not v:
-                    current_key = k.strip()
-                    current_section = {}
-                    result[current_key] = current_section
-                else:
-                    result[k.strip()] = v
-            elif current_key and stripped.startswith("  ") and ":" in stripped:
-                k, _, v = stripped.strip().partition(":")
-                v = v.strip().strip('"').strip("'")
-                if v.lower() == "true":
-                    current_section[k.strip()] = True
-                elif v.lower() == "false":
-                    current_section[k.strip()] = False
-                elif v.lower() == "null":
-                    current_section[k.strip()] = None
-                else:
-                    current_section[k.strip()] = v
+            indent = len(stripped) - len(stripped.lstrip(" "))
+            while len(stack) > 1 and indent <= stack[-1][0]:
+                stack.pop()
+            current_section = stack[-1][1]
+            if ":" not in content:
+                continue
+            key, _, value = content.partition(":")
+            key = key.strip()
+            value = value.strip()
+            if not value:
+                new_section: dict[str, object] = {}
+                current_section[key] = new_section
+                stack.append((indent, new_section))
+            elif value.lower() == "true":
+                current_section[key] = True
+            elif value.lower() == "false":
+                current_section[key] = False
+            elif value.lower() == "null":
+                current_section[key] = None
+            else:
+                current_section[key] = value.strip('"').strip("'")
     return result
 
 
@@ -172,9 +174,35 @@ class TestConfig:
         assert safety.get("allow_hub_push_by_default") is False, \
             "allow_hub_push_by_default must be false."
 
+    def test_config_primary_model_is_7b(self):
+        """Test 5: Config sets the flagship Kaggle target to Unsloth Qwen2.5 7B."""
+        cfg = _load_yaml_simple(CONFIG_PATH)
+        model = cfg.get("model", {})
+        assert isinstance(model, dict)
+        assert model.get("base_model_name") == "unsloth/Qwen2.5-7B-Instruct"
+
+    def test_config_has_local_and_smoke_profiles(self):
+        """Test 5: Config includes explicit local baseline and smoke-test profiles."""
+        cfg = _load_yaml_simple(CONFIG_PATH)
+        model = cfg.get("model", {})
+        assert isinstance(model, dict)
+        profiles = model.get("model_profiles", {})
+        assert isinstance(profiles, dict)
+
+        local_baseline = profiles.get("local_baseline", {})
+        smoke_test = profiles.get("smoke_test", {})
+
+        assert local_baseline.get("name") == "Qwen/Qwen2.5-3B-Instruct"
+        assert local_baseline.get("expected_location") == "local machine"
+        assert "local/dev baseline" in str(local_baseline.get("purpose", ""))
+
+        assert smoke_test.get("name") == "Qwen/Qwen2.5-0.5B-Instruct"
+        assert smoke_test.get("expected_location") == "Kaggle or local smoke test"
+        assert "smoke test only" in str(smoke_test.get("purpose", ""))
+
 
 # ---------------------------------------------------------------------------
-# Test 5-8: Notebook
+# Test 6-9: Notebook
 # ---------------------------------------------------------------------------
 
 
@@ -203,7 +231,7 @@ class TestNotebook:
         assert "cells" in nb or "nbformat" in nb
 
     def test_notebook_contains_synthetic_warning(self, notebook, nb_text):
-        """Test 6: Notebook contains synthetic-only warning."""
+        """Test 7: Notebook contains synthetic-only warning."""
         warnings = [
             "SYNTHETIC DEMO ONLY",
             "synthetic demo only",
@@ -213,8 +241,20 @@ class TestNotebook:
         found = any(w in nb_text for w in warnings)
         assert found, "Notebook must contain synthetic-only warning."
 
+    def test_notebook_defaults_to_7b_flagship_target(self, nb_text):
+        """Test 7: Notebook default model is 7B, not the old 0.5B default."""
+        assert 'BASE_MODEL_NAME = "unsloth/Qwen2.5-7B-Instruct"' in nb_text
+        assert 'BASE_MODEL_NAME = "Qwen/Qwen2.5-0.5B-Instruct"' not in nb_text
+
+    def test_notebook_documents_model_profile_tiers(self, nb_text):
+        """Test 7: Notebook explains 7B primary, 3B local baseline, 0.5B smoke-test role."""
+        lowered = nb_text.lower()
+        assert "7b is the flagship kaggle target" in lowered
+        assert "3b is the local/dev baseline" in lowered
+        assert "0.5b is smoke-test only" in lowered
+
     def test_notebook_no_uts_vlc_reference(self, notebook, nb_text):
-        """Test 7: Notebook code cells do not reference UTS_VLC as training data."""
+        """Test 8: Notebook code cells do not reference UTS_VLC as training data."""
         # Only check code cells — markdown may mention UTS_VLC in 'does NOT use' context
         code_text = "\n".join(
             "".join(c.get("source", []) if isinstance(c.get("source"), list) else c.get("source", ""))
@@ -225,7 +265,7 @@ class TestNotebook:
             "Notebook code cells must not reference UTS_VLC as training data."
 
     def test_notebook_no_corpus_manifest_reference(self, notebook, nb_text):
-        """Test 7: Notebook active code (non-comment) lines do not reference artifacts/corpus_candidate_manifest."""
+        """Test 8: Notebook active code (non-comment) lines do not reference artifacts/corpus_candidate_manifest."""
         # Only check active (non-comment) code cell lines
         # The forbidden pattern is 'artifacts/corpus_candidate_manifest' as a path reference
         all_code_lines = []
@@ -241,7 +281,7 @@ class TestNotebook:
             "Notebook active code cells must not use artifacts/corpus_candidate_manifest as training data."
 
     def test_notebook_no_phase2_artifacts_as_training(self, notebook):
-        """Test 7: Notebook code cells do not reference artifacts/phase_2 as training input."""
+        """Test 8: Notebook code cells do not reference artifacts/phase_2 as training input."""
         code_text = "\n".join(
             "".join(c.get("source", []) if isinstance(c.get("source"), list) else c.get("source", ""))
             for c in notebook.get("cells", [])
@@ -251,7 +291,7 @@ class TestNotebook:
             "Notebook code cells must not use artifacts/phase_2 as training data."
 
     def test_notebook_no_approved_for_rag_true(self, notebook):
-        """Test 7: Notebook code cells do not contain approved_for_rag_index=true."""
+        """Test 8: Notebook code cells do not contain approved_for_rag_index=true."""
         code_text = "\n".join(
             "".join(c.get("source", []) if isinstance(c.get("source"), list) else c.get("source", ""))
             for c in notebook.get("cells", [])
@@ -262,7 +302,7 @@ class TestNotebook:
             assert f not in code_text, f"Forbidden pattern found in code cells: {f!r}"
 
     def test_notebook_no_legal_ground_truth_true(self, notebook):
-        """Test 7: Notebook code cells do not contain is_legal_ground_truth=true."""
+        """Test 8: Notebook code cells do not contain is_legal_ground_truth=true."""
         code_text = "\n".join(
             "".join(c.get("source", []) if isinstance(c.get("source"), list) else c.get("source", ""))
             for c in notebook.get("cells", [])
@@ -273,7 +313,7 @@ class TestNotebook:
             assert f not in code_text, f"Forbidden pattern found in code cells: {f!r}"
 
     def test_notebook_no_active_push_to_hub(self, notebook):
-        """Test 8: Notebook code cells do not contain an active (uncommented) push_to_hub( call."""
+        """Test 9: Notebook code cells do not contain an active (uncommented) push_to_hub( call."""
         code_text = "\n".join(
             "".join(c.get("source", []) if isinstance(c.get("source"), list) else c.get("source", ""))
             for c in notebook.get("cells", [])
@@ -288,13 +328,13 @@ class TestNotebook:
 
 
 # ---------------------------------------------------------------------------
-# Test 9-11: Validator
+# Test 10-12: Validator
 # ---------------------------------------------------------------------------
 
 
 class TestValidator:
     def test_validator_passes_on_current_scaffold(self):
-        """Test 9: Validator exits 0 on current scaffold."""
+        """Test 10: Validator exits 0 on current scaffold."""
         result = subprocess.run(
             [sys.executable, str(VALIDATOR_SCRIPT)],
             capture_output=True,
@@ -306,7 +346,7 @@ class TestValidator:
         )
 
     def test_validator_fails_on_unsafe_config(self, tmp_path):
-        """Test 10: Validator fails when use_real_legal_corpus is true."""
+        """Test 11: Validator fails when use_real_legal_corpus is true."""
         unsafe_config = tmp_path / "unsafe_config.yaml"
         unsafe_config.write_text(
             "track: \"A\"\n"
@@ -348,7 +388,7 @@ sys.exit(0)
             "Should fail when use_real_legal_corpus=true."
 
     def test_validator_fails_on_notebook_with_corpus_manifest(self, tmp_path):
-        """Test 11: Validator logic fails on notebook referencing corpus_candidate_manifest."""
+        """Test 12: Validator logic fails on notebook referencing corpus_candidate_manifest."""
         # Create a minimal unsafe notebook
         unsafe_nb = {
             "nbformat": 4,
@@ -394,7 +434,7 @@ sys.exit(0)
 
 
 # ---------------------------------------------------------------------------
-# Test 12-13: Packaging Script
+# Test 13-14: Packaging Script
 # ---------------------------------------------------------------------------
 
 
@@ -406,7 +446,7 @@ class TestPackagingScript:
                 fh.write(json.dumps(row, ensure_ascii=False) + "\n")
 
     def test_packaging_creates_output_dir(self, tmp_path):
-        """Test 12: Dataset packaging script creates output directory with required files."""
+        """Test 13: Dataset packaging script creates output directory with required files."""
         split_dir = tmp_path / "splits"
         split_dir.mkdir()
         output_dir = tmp_path / "kaggle_pkg"
@@ -439,7 +479,7 @@ class TestPackagingScript:
         assert (output_dir / "DATASET_CARD.md").exists()
 
     def test_packaging_creates_zip(self, tmp_path):
-        """Test 12: Dataset packager can create a zip archive."""
+        """Test 13: Dataset packager can create a zip archive."""
         split_dir = tmp_path / "splits"
         split_dir.mkdir()
         output_dir = tmp_path / "kaggle_pkg"
@@ -468,7 +508,7 @@ class TestPackagingScript:
         assert zip_out.stat().st_size > 0, "Zip archive must not be empty."
 
     def test_dataset_card_contains_disclaimer(self, tmp_path):
-        """Test 13: Packaged dataset card contains synthetic-only disclaimer."""
+        """Test 14: Packaged dataset card contains synthetic-only disclaimer."""
         split_dir = tmp_path / "splits"
         split_dir.mkdir()
         output_dir = tmp_path / "kaggle_pkg"
@@ -499,7 +539,7 @@ class TestPackagingScript:
             "Dataset card must contain 'not official legal text'."
 
     def test_packaging_fails_on_wrong_row_count(self, tmp_path):
-        """Test 12: Packager fails if row counts don't match expected."""
+        """Test 13: Packager fails if row counts don't match expected."""
         split_dir = tmp_path / "splits"
         split_dir.mkdir()
         output_dir = tmp_path / "kaggle_pkg"

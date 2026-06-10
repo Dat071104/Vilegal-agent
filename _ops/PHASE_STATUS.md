@@ -49,6 +49,7 @@
 - `CONFIRMED`: Track A synthetic demo branch exists for portfolio acceleration and does not change Track B safety gates.
 - `CONFIRMED`: synthetic demo data is not legal advice and not official legal text.
 - `CONFIRMED`: Track A1.5 expands the local synthetic dataset, audit, and split workflow under artifacts only.
+- `CONFIRMED`: Track A2 now targets `unsloth/Qwen2.5-7B-Instruct` for the flagship Kaggle run, with `Qwen/Qwen2.5-3B-Instruct` as the local/dev baseline and `Qwen/Qwen2.5-0.5B-Instruct` as smoke-test only.
 
 ## Candidate interpretation
 
@@ -484,9 +485,12 @@
 - Added Kaggle fine-tune demo notebook, dataset packaging script, validator, tests, and governance documentation.
 - `configs/track_a_kaggle_finetune_demo.yaml` added with all safety flags set correctly.
 - `notebooks/track_a_kaggle_synthetic_finetune_demo.ipynb` added — valid JSON, synthetic-only.
+- Primary portfolio model target updated to `unsloth/Qwen2.5-7B-Instruct` for Kaggle QLoRA.
+- `Qwen/Qwen2.5-3B-Instruct` documented as the local/dev baseline because the user can already run 3B locally.
+- `Qwen/Qwen2.5-0.5B-Instruct` retained only for smoke testing.
 - `scripts/prepare_kaggle_synthetic_dataset.py` added — packages splits for Kaggle upload.
 - `scripts/validate_track_a_kaggle_demo.py` added — validates config + notebook safety.
-- `tests/test_track_a_kaggle_demo.py` added — 13 test coverage areas.
+- `tests/test_track_a_kaggle_demo.py` added — extended coverage for model-profile alignment and safety checks.
 - `docs/TRACK_A_KAGGLE_SYNTHETIC_FINETUNE.md` added — full runbook.
 - `docs/TRACK_A_BENCHMARK_PLAN.md` added — benchmark methodology and portfolio checklist.
 - Safety confirmation:

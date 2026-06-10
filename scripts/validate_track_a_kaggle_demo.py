@@ -51,6 +51,25 @@ REQUIRED_CONFIG_FLAGS: dict[str, object] = {
     "allow_hub_push_by_default": False,
 }
 
+REQUIRED_PRIMARY_MODEL = "unsloth/Qwen2.5-7B-Instruct"
+REQUIRED_MODEL_PROFILES: dict[str, dict[str, str]] = {
+    "primary_kaggle": {
+        "name": "unsloth/Qwen2.5-7B-Instruct",
+        "purpose": "primary flagship Kaggle QLoRA portfolio demo",
+        "expected_location": "Kaggle GPU",
+    },
+    "local_baseline": {
+        "name": "Qwen/Qwen2.5-3B-Instruct",
+        "purpose": "local/dev baseline because user can run 3B locally",
+        "expected_location": "local machine",
+    },
+    "smoke_test": {
+        "name": "Qwen/Qwen2.5-0.5B-Instruct",
+        "purpose": "low-memory smoke test only, not portfolio target",
+        "expected_location": "Kaggle or local smoke test",
+    },
+}
+
 # Forbidden patterns in notebook CODE cells only (as training data references)
 NOTEBOOK_FORBIDDEN_CODE_PATTERNS: list[str] = [
     "UTS_VLC",
@@ -96,28 +115,36 @@ def _load_yaml(path: Path) -> dict[str, object]:
         with path.open("r", encoding="utf-8") as fh:
             data = yaml.safe_load(fh)
         return data if isinstance(data, dict) else {}
-    # Minimal fallback: parse key: value lines only (sufficient for flat safety block)
+    # Minimal fallback: parse nested key/value mappings based on indentation.
     result: dict[str, object] = {}
-    current_section: dict[str, object] | None = None
+    stack: list[tuple[int, dict[str, object]]] = [(-1, result)]
     with path.open("r", encoding="utf-8") as fh:
         for line in fh:
-            stripped = line.rstrip()
-            if not stripped or stripped.startswith("#"):
+            stripped = line.rstrip("\n")
+            content = stripped.strip()
+            if not content or content.startswith("#"):
                 continue
-            if not stripped.startswith(" ") and stripped.endswith(":"):
-                key = stripped.rstrip(":")
-                current_section = {}
-                result[key] = current_section
-            elif current_section is not None and stripped.startswith("  "):
-                if ":" in stripped:
-                    k, _, v = stripped.strip().partition(":")
-                    v = v.strip()
-                    if v.lower() == "true":
-                        current_section[k.strip()] = True
-                    elif v.lower() == "false":
-                        current_section[k.strip()] = False
-                    else:
-                        current_section[k.strip()] = v.strip('"').strip("'")
+            indent = len(stripped) - len(stripped.lstrip(" "))
+            while len(stack) > 1 and indent <= stack[-1][0]:
+                stack.pop()
+            current_section = stack[-1][1]
+            if ":" not in content:
+                continue
+            key, _, value = content.partition(":")
+            key = key.strip()
+            value = value.strip()
+            if not value:
+                new_section: dict[str, object] = {}
+                current_section[key] = new_section
+                stack.append((indent, new_section))
+            elif value.lower() == "true":
+                current_section[key] = True
+            elif value.lower() == "false":
+                current_section[key] = False
+            elif value.lower() == "null":
+                current_section[key] = None
+            else:
+                current_section[key] = value.strip('"').strip("'")
     return result
 
 
@@ -190,8 +217,41 @@ def check_config(errors: list[str]) -> None:
                 f"[CONFIG] safety.{flag} = {actual!r}, expected {expected!r}"
             )
 
+    model = cfg.get("model", {})
+    if not isinstance(model, dict):
+        errors.append("[CONFIG] 'model' section is missing or malformed.")
+        return
+
+    base_model_name = model.get("base_model_name")
+    if base_model_name != REQUIRED_PRIMARY_MODEL:
+        errors.append(
+            "[CONFIG] model.base_model_name = "
+            f"{base_model_name!r}, expected {REQUIRED_PRIMARY_MODEL!r}"
+        )
+
+    model_profiles = model.get("model_profiles", {})
+    if not isinstance(model_profiles, dict):
+        errors.append("[CONFIG] 'model.model_profiles' section is missing or malformed.")
+    else:
+        for profile_name, expected_profile in REQUIRED_MODEL_PROFILES.items():
+            actual_profile = model_profiles.get(profile_name)
+            if not isinstance(actual_profile, dict):
+                errors.append(
+                    f"[CONFIG] model.model_profiles.{profile_name} is missing or malformed."
+                )
+                continue
+            for key, expected_value in expected_profile.items():
+                actual_value = actual_profile.get(key)
+                if actual_value != expected_value:
+                    errors.append(
+                        "[CONFIG] model.model_profiles."
+                        f"{profile_name}.{key} = {actual_value!r}, "
+                        f"expected {expected_value!r}"
+                    )
+
     print(f"  [CONFIG] Loaded: {CONFIG_PATH.name}")
     print(f"  [CONFIG] Safety flags checked: {len(REQUIRED_CONFIG_FLAGS)}")
+    print(f"  [CONFIG] Model target checked: {REQUIRED_PRIMARY_MODEL}")
 
 
 def check_notebook_exists_and_valid_json(errors: list[str]) -> dict[str, object] | None:

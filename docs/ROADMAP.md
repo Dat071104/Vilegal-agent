@@ -48,6 +48,9 @@ Stop condition:
 - Track A1.5 adds local synthetic dataset expansion, audit, and split workflow under `artifacts/` only.
 - Track A2 adds a Kaggle synthetic fine-tune demo using local synthetic split artifacts only.
   - Synthetic-demo data only — no real legal corpus, no UTS_VLC, no corpus_candidate_manifest.
+  - Flagship portfolio target: `unsloth/Qwen2.5-7B-Instruct` QLoRA on Kaggle.
+  - Local/dev baseline: `Qwen/Qwen2.5-3B-Instruct`.
+  - Smoke-test only: `Qwen/Qwen2.5-0.5B-Instruct`.
   - Full synthetic dataset remains an artifact, not committed.
   - Model/adapters/checkpoints are not committed.
   - Track A2 does not unblock Track B real legal QA/SFT/RAG.

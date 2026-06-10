@@ -13,6 +13,11 @@ Track A2 enables a Kaggle-hosted synthetic fine-tune demonstration using only th
 demo. It does not demonstrate legal correctness, legal-ground-truth capability, or
 real legal corpus training.
 
+The flagship Track A2 portfolio run is **Qwen2.5-7B QLoRA on Kaggle** via
+`unsloth/Qwen2.5-7B-Instruct`. `Qwen/Qwen2.5-3B-Instruct` is the local/dev baseline
+because the user can already run 3B locally. `Qwen/Qwen2.5-0.5B-Instruct` remains
+smoke-test only.
+
 Track B real legal corpus governance remains **blocked** for QA, SFT, and RAG.
 
 ---
@@ -102,7 +107,8 @@ The script will:
 2. Attach your `vilegal-synthetic-demo` dataset as input at path:
    `/kaggle/input/vilegal-synthetic-demo`
 3. Enable GPU (T4 × 2 recommended for QLoRA demo).
-4. Set `KAGGLE_INPUT_DIR` and `BASE_MODEL_NAME` in Section 1 if needed.
+4. The default `BASE_MODEL_NAME` in Section 1 is `unsloth/Qwen2.5-7B-Instruct`.
+   Change it only if you intentionally need the 3B local/dev baseline or the 0.5B smoke-test profile.
 5. Run all cells in order:
    - Section 1: Configuration
    - Section 2: Dataset Validation (fails closed if safety constraints violated)
@@ -151,7 +157,7 @@ python -m pytest tests/test_track_a_kaggle_demo.py -v
 
 Track A2 **demonstrates:**
 - ML fine-tune workflow mechanics (dataset loading, validation, formatting, LoRA, SFT)
-- QLoRA setup on a small open instruct model (Qwen2.5-0.5B or similar)
+- QLoRA setup for the flagship 7B Kaggle target, with 3B retained as the local/dev baseline
 - Benchmark comparison methodology (base vs. adapter)
 - Fail-closed synthetic-only safety validation pipeline
 

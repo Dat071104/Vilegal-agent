@@ -37,7 +37,7 @@ Evaluation uses a random sample of 50 rows from the 250-row test split (configur
 
 | Step | Description |
 |---|---|
-| 1. Load base model | Load `Qwen/Qwen2.5-0.5B-Instruct` (or configured model) without any fine-tuning. |
+| 1. Load base model | Load `unsloth/Qwen2.5-7B-Instruct` for the flagship Kaggle run. Use `Qwen/Qwen2.5-3B-Instruct` only as the local/dev baseline or `Qwen/Qwen2.5-0.5B-Instruct` for smoke tests. |
 | 2. Evaluate base | Run inference on `EVAL_SAMPLE_SIZE` test rows using inference-style prompts. |
 | 3. Load adapter | Load the LoRA adapter from `/kaggle/working/vilegal-synthetic-demo-adapter/`. |
 | 4. Evaluate adapter | Run inference on the same rows with the adapter applied. |
@@ -65,8 +65,8 @@ Evaluation uses a random sample of 50 rows from the 250-row test split (configur
 
 | Model | Dataset | Examples | format_valid_rate | synthetic_task_pass_rate | disclaimer_present_rate | Notes |
 |---|---|---|---|---|---|---|
-| `Qwen2.5-0.5B-Instruct` (base) | synthetic-demo/test | 50 | — | — | 1.0 | Pre-fine-tune baseline |
-| `Qwen2.5-0.5B-Instruct` + LoRA (Track A2) | synthetic-demo/test | 50 | — | — | 1.0 | After 1-epoch synthetic fine-tune |
+| `unsloth/Qwen2.5-7B-Instruct` (base) | synthetic-demo/test | 50 | — | — | 1.0 | Flagship Kaggle baseline |
+| `unsloth/Qwen2.5-7B-Instruct` + LoRA (Track A2) | synthetic-demo/test | 50 | — | — | 1.0 | Flagship Kaggle 7B QLoRA demo |
 
 *Fill in metric values from `track_a_benchmark_results.json` after running the Kaggle notebook.*
 
@@ -114,5 +114,5 @@ These are planned but not yet implemented:
 |---|---|---|
 | Retrieval demo benchmark | Compare synthetic-demo RAG retrieval on canned QA | Track A3 |
 | Disclaimer refusal rate | Measure rate of safety refusals on legal-advice-like prompts | Track A3+ |
-| Multi-model comparison | Compare 0.5B vs 1.5B adapter on same synthetic test set | Track A2+ |
+| Multi-model comparison | Compare 7B Kaggle run vs 3B local/dev baseline on the same synthetic test set | Track A2+ |
 | Full test set evaluation | Evaluate on all 250 test rows (not just 50-row sample) | Track A2 refresh |

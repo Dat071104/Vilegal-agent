@@ -12,7 +12,9 @@ Show a complete AI engineering demo path that includes synthetic dataset design,
 - Portfolio screenshots of dataset rows, validation output, and demo workflow.
 - README section describing Track A mechanics and Track B governance separation.
 - **Track A2:** Kaggle synthetic fine-tune demo notebook, dataset packaging script, validator, tests, and docs.
-  - Synthetic fine-tune of a small instruct model on synthetic-demo data (Kaggle-only).
+  - Synthetic fine-tune of `unsloth/Qwen2.5-7B-Instruct` as the flagship Kaggle portfolio run.
+  - `Qwen/Qwen2.5-3B-Instruct` retained as the local/dev baseline because the user can run 3B locally.
+  - `Qwen/Qwen2.5-0.5B-Instruct` retained only for smoke testing.
   - Benchmark comparison: base vs LoRA adapter on synthetic test set.
   - Screenshot evidence from Kaggle notebook run.
   - Benchmark JSON exported from `/kaggle/working/`.
@@ -51,3 +53,4 @@ Use this wording in README, slides, and portfolio pages:
 
 - AI engineering demo: synthetic fine-tune, synthetic retrieval, demo deployment, screenshots, and benchmark presentation.
 - Data governance project: legal corpus readiness pipeline, provenance controls, review gates, and blocked real-corpus QA/SFT/RAG decisions.
+- Synthetic Track A still does not prove legal correctness, and Track B real legal corpus work remains blocked.

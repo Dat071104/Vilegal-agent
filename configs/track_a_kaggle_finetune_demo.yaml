@@ -28,8 +28,21 @@ dataset:
   expected_test_rows: 250
 
 model:
-  base_model_name: "Qwen/Qwen2.5-0.5B-Instruct"
-  note: "Small instruct model selected for Kaggle demo constraints. User may change before running."
+  base_model_name: "unsloth/Qwen2.5-7B-Instruct"
+  note: "Primary Track A2 flagship target is 7B QLoRA on Kaggle. Use 3B for local/dev baseline. Use 0.5B only for smoke tests."
+  model_profiles:
+    primary_kaggle:
+      name: "unsloth/Qwen2.5-7B-Instruct"
+      purpose: "primary flagship Kaggle QLoRA portfolio demo"
+      expected_location: "Kaggle GPU"
+    local_baseline:
+      name: "Qwen/Qwen2.5-3B-Instruct"
+      purpose: "local/dev baseline because user can run 3B locally"
+      expected_location: "local machine"
+    smoke_test:
+      name: "Qwen/Qwen2.5-0.5B-Instruct"
+      purpose: "low-memory smoke test only, not portfolio target"
+      expected_location: "Kaggle or local smoke test"
   use_lora: true
   use_qlora_if_available: true
   push_to_hub: false
