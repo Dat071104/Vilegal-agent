@@ -1,0 +1,38 @@
+phase: "3A"
+name: "Kaggle/QLoRA Scaffold Only"
+mode: "scaffold_only"
+
+safety:
+  allow_training: false
+  allow_qa_generation: false
+  allow_rag_indexing: false
+  allow_dataset_publish: false
+  allow_model_download_by_default: false
+  allow_hub_push: false
+  allow_adapter_save: false
+  require_future_human_gate: true
+
+data:
+  use_real_legal_corpus: false
+  use_corpus_candidate_manifest: false
+  require_approved_sft_dataset: true
+  approved_sft_dataset_path: null
+
+training:
+  base_model_name: null
+  output_dir: null
+  lora_r: null
+  lora_alpha: null
+  lora_dropout: null
+  max_seq_length: null
+  train_batch_size: null
+  gradient_accumulation_steps: null
+  learning_rate: null
+  num_train_epochs: null
+
+blocked_until_future_gate:
+  - "QA/SFT dataset gate approval"
+  - "source viability decision"
+  - "human approval for real legal corpus use"
+  - "train/validation/test split approval"
+  - "evaluation plan approval"

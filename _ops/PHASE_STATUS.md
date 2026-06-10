@@ -1,7 +1,7 @@
 # Phase Status
 
-**Current phase:** Phase 2N - Roadmap and Risk Correction Patch  
-**Current verdict:** PASS - PHASE 3 READY FOR SCAFFOLD ONLY
+**Current phase:** Phase 3A - Kaggle/QLoRA Scaffold Only  
+**Current verdict:** PASS - SCAFFOLD ONLY VALIDATOR PASSED
 
 ## Current readiness flags
 
@@ -9,6 +9,8 @@
 - `qa_generation_ready=false`
 - `fine_tuning_ready=false`
 - `rag_indexing_ready=false`
+- `dataset_publishing_ready=false`
+- `real_legal_corpus_use_ready=false`
 - `approved_for_rag_index=true` remains blocked and must stay unset.
 
 ## Phase gates
@@ -20,7 +22,7 @@
 | Phase 2: Data pipeline and processing | PASS WITH RISKS | 2026-06-10 |
 | Phase 2M: Full Phase 3 readiness audit | PASS - PHASE 3 READY FOR SCAFFOLD ONLY | 2026-06-10 |
 | Phase 2N: Roadmap and risk correction patch | PASS | 2026-06-10 |
-| Phase 3A: Kaggle/QLoRA scaffold only | READY FOR SCAFFOLD ONLY | 2026-06-10 |
+| Phase 3A: Kaggle/QLoRA scaffold only | PASS - VALIDATOR REQUIRED AND PASSED | 2026-06-10 |
 | Phase 3B: QA/SFT dataset gate design | NOT STARTED - DESIGN ONLY | - |
 | Phase 3D: Source viability decision | REQUIRED BEFORE REAL QA/SFT/RAG | - |
 | Phase 3: RAG knowledge base | BLOCKED FOR REAL DATA | - |
@@ -35,7 +37,8 @@
 - `CONFIRMED`: generated instruction and QA datasets are not treated as legal ground truth in the updated audit docs.
 - `NEEDS MANUAL REVIEW`: non-synthetic source provenance and relicensing remain unresolved.
 - `CONFIRMED`: Phase 3 ready means Phase 3A scaffold-only. It does not mean ready for QA generation, fine-tuning, RAG/vector indexing, dataset publishing, or legal-ground-truth use.
-- `CONFIRMED`: real QA generation, fine-tuning, RAG indexing, dataset publishing, legal-ground-truth promotion, and `approved_for_rag_index=true` remain blocked.
+- `CONFIRMED`: Phase 3A is completed only when the scaffold validator passes.
+- `CONFIRMED`: real QA generation, fine-tuning, RAG indexing, dataset publishing, real legal corpus use, legal-ground-truth promotion, and `approved_for_rag_index=true` remain blocked.
 
 ## Candidate interpretation
 
@@ -420,3 +423,20 @@
   - actual vector/RAG indexing is not allowed
   - dataset publication is not allowed
 - **Phase 3 is not ready for execution.**
+
+## Phase 3A - Kaggle/QLoRA Scaffold Only
+
+**Date:** 2026-06-10
+**Verdict:** PASS - VALIDATOR REQUIRED AND PASSED
+
+- Added scaffold-only config, notebook, validator, tests, and governance documentation.
+- `python scripts/validate_phase3a_scaffold.py` is now the completion gate for this phase.
+- The validator blocks active training/model/hub patterns in executable notebook cells.
+- The validator requires all scaffold safety flags to remain fail-closed.
+- The validator requires docs to preserve the scaffold-only boundary.
+- QA generation remains blocked.
+- Fine-tuning remains blocked.
+- RAG/vector indexing remains blocked.
+- Dataset publishing remains blocked.
+- Real legal corpus use remains blocked.
+- Track A synthetic demo remains separate from Track B governance.
