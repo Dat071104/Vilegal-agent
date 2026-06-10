@@ -1,16 +1,18 @@
 # Phase Status
 
-**Current phase:** Phase 3A - Kaggle/QLoRA Scaffold Only  
-**Current verdict:** PASS - SCAFFOLD ONLY VALIDATOR PASSED
+**Current phase:** Track A0/A1 - Synthetic Demo Foundation  
+**Current verdict:** PASS - SYNTHETIC DEMO FOUNDATION READY
 
 ## Current readiness flags
 
 - `phase3_scaffold_ready=true`
+- `track_a_synthetic_demo_foundation_ready=true`
 - `qa_generation_ready=false`
 - `fine_tuning_ready=false`
 - `rag_indexing_ready=false`
 - `dataset_publishing_ready=false`
 - `real_legal_corpus_use_ready=false`
+- `track_b_safety_gates_unchanged=true`
 - `approved_for_rag_index=true` remains blocked and must stay unset.
 
 ## Phase gates
@@ -22,6 +24,8 @@
 | Phase 2: Data pipeline and processing | PASS WITH RISKS | 2026-06-10 |
 | Phase 2M: Full Phase 3 readiness audit | PASS - PHASE 3 READY FOR SCAFFOLD ONLY | 2026-06-10 |
 | Phase 2N: Roadmap and risk correction patch | PASS | 2026-06-10 |
+| Track A0/A1: Synthetic demo foundation | PASS - SYNTHETIC DATA ONLY | 2026-06-10 |
+| Track A2: Kaggle synthetic fine-tune demo | NOT STARTED - SYNTHETIC ONLY | - |
 | Phase 3A: Kaggle/QLoRA scaffold only | PASS - VALIDATOR REQUIRED AND PASSED | 2026-06-10 |
 | Phase 3B: QA/SFT dataset gate design | NOT STARTED - DESIGN ONLY | - |
 | Phase 3D: Source viability decision | REQUIRED BEFORE REAL QA/SFT/RAG | - |
@@ -39,6 +43,8 @@
 - `CONFIRMED`: Phase 3 ready means Phase 3A scaffold-only. It does not mean ready for QA generation, fine-tuning, RAG/vector indexing, dataset publishing, or legal-ground-truth use.
 - `CONFIRMED`: Phase 3A is completed only when the scaffold validator passes.
 - `CONFIRMED`: real QA generation, fine-tuning, RAG indexing, dataset publishing, real legal corpus use, legal-ground-truth promotion, and `approved_for_rag_index=true` remain blocked.
+- `CONFIRMED`: Track A synthetic demo branch exists for portfolio acceleration and does not change Track B safety gates.
+- `CONFIRMED`: synthetic demo data is not legal advice and not official legal text.
 
 ## Candidate interpretation
 
@@ -440,3 +446,16 @@
 - Dataset publishing remains blocked.
 - Real legal corpus use remains blocked.
 - Track A synthetic demo remains separate from Track B governance.
+
+## Track A0/A1 - Synthetic Demo Foundation
+
+**Date:** 2026-06-10
+**Verdict:** PASS - SYNTHETIC DATA ONLY
+
+- Added Track A synthetic-demo config, schema, generator, validator, sample file, and tests.
+- Synthetic demo data is explicitly labeled `synthetic-demo`.
+- Synthetic demo data is not legal advice and not official legal text.
+- Track A does not use `UTS_VLC` candidates or `corpus_candidate_manifest`.
+- Track A does not change Track B safety gates.
+- Future Track A2 may do a Kaggle fine-tune demo using synthetic data only.
+- Real legal corpus QA, SFT, and RAG remain blocked.

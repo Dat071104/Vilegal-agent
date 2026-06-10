@@ -2,7 +2,7 @@
 
 A portfolio-grade Vietnamese Legal AI Agent.
 
-**Current Status:** Phase 3A Kaggle/QLoRA scaffold-only implemented. Phase 3A is completed only if the scaffold validator passes. `Phase 3 ready` still means `Phase 3A scaffold-only`. **NOT PRODUCTION READY**.
+**Current Status:** Track A synthetic demo branch exists for portfolio acceleration, while Track B remains safety-gated. Phase 3A Kaggle/QLoRA scaffold-only is implemented on the governance path. **NOT PRODUCTION READY**.
 
 ## Disclaimer
 **SAFETY & LEGAL DISCLAIMER:** This is an educational project and does not provide legal advice. Do not use for actual legal compliance without consulting a qualified attorney.
@@ -24,6 +24,10 @@ A portfolio-grade Vietnamese Legal AI Agent.
 - May use synthetic QA and synthetic/legal-like fixtures.
 - May build a public demo, Kaggle fine-tune demo, benchmark table, screenshots, and CV evidence.
 - Must label all data as `synthetic-demo`.
+- Track A synthetic demo branch exists for portfolio acceleration.
+- Synthetic demo data is not legal advice and not official legal text.
+- Track A does not change Track B safety gates.
+- Future Track A2 may do a Kaggle fine-tune demo using synthetic data only.
 - Must not claim legal correctness, legal-ground-truth status, production readiness, or official legal advice.
 - Must not use `UTS_VLC` candidates or the real candidate manifest as training or RAG ground truth.
 
@@ -33,6 +37,7 @@ A portfolio-grade Vietnamese Legal AI Agent.
 - Phase 3B is QA/SFT dataset gate design.
 - Phase 3D or equivalent source viability decision is required before real QA/SFT/RAG.
 - Real QA generation, fine-tuning, RAG indexing, dataset publishing, real legal corpus use, legal-ground-truth promotion, and `approved_for_rag_index=true` remain blocked.
+- Track A does not unblock Track B real QA, SFT, or RAG.
 
 ## Planned Architecture
 1. **Data Pipeline:** Sample-only ingestion, provenance gates, and deterministic review buckets.
@@ -55,3 +60,4 @@ A portfolio-grade Vietnamese Legal AI Agent.
 - **Phase 5:** LangGraph Agent Orchestration (Blocked)
 - **Phase 6:** Evaluation & Deployment (Blocked)
 See [docs/ROADMAP.md](/D:/Project%20cua%20Dat/vilegal-agent/docs/ROADMAP.md), [docs/PHASE_2N_ROADMAP_RISK_PATCH.md](/D:/Project%20cua%20Dat/vilegal-agent/docs/PHASE_2N_ROADMAP_RISK_PATCH.md), and [docs/PHASE_3A_KAGGLE_QLORA_SCAFFOLD.md](/D:/Project%20cua%20Dat/vilegal-agent/docs/PHASE_3A_KAGGLE_QLORA_SCAFFOLD.md) for the current governance and synthetic-demo split.
+Track A details live in [docs/TRACK_A_SYNTHETIC_DEMO.md](/D:/Project%20cua%20Dat/vilegal-agent/docs/TRACK_A_SYNTHETIC_DEMO.md) and [docs/TRACK_A_PORTFOLIO_PLAN.md](/D:/Project%20cua%20Dat/vilegal-agent/docs/TRACK_A_PORTFOLIO_PLAN.md).
