@@ -27,6 +27,7 @@ A portfolio-grade Vietnamese Legal AI Agent.
 - Track A synthetic demo branch exists for portfolio acceleration.
 - Synthetic demo data is not legal advice and not official legal text.
 - Track A does not change Track B safety gates.
+- Track A1.5 adds local synthetic dataset expansion, audit, and split workflow under `artifacts/` only.
 - Future Track A2 may do a Kaggle fine-tune demo using synthetic data only.
 - Must not claim legal correctness, legal-ground-truth status, production readiness, or official legal advice.
 - Must not use `UTS_VLC` candidates or the real candidate manifest as training or RAG ground truth.
@@ -61,3 +62,4 @@ A portfolio-grade Vietnamese Legal AI Agent.
 - **Phase 6:** Evaluation & Deployment (Blocked)
 See [docs/ROADMAP.md](/D:/Project%20cua%20Dat/vilegal-agent/docs/ROADMAP.md), [docs/PHASE_2N_ROADMAP_RISK_PATCH.md](/D:/Project%20cua%20Dat/vilegal-agent/docs/PHASE_2N_ROADMAP_RISK_PATCH.md), and [docs/PHASE_3A_KAGGLE_QLORA_SCAFFOLD.md](/D:/Project%20cua%20Dat/vilegal-agent/docs/PHASE_3A_KAGGLE_QLORA_SCAFFOLD.md) for the current governance and synthetic-demo split.
 Track A details live in [docs/TRACK_A_SYNTHETIC_DEMO.md](/D:/Project%20cua%20Dat/vilegal-agent/docs/TRACK_A_SYNTHETIC_DEMO.md) and [docs/TRACK_A_PORTFOLIO_PLAN.md](/D:/Project%20cua%20Dat/vilegal-agent/docs/TRACK_A_PORTFOLIO_PLAN.md).
+Track A1.5 details live in [docs/TRACK_A_SYNTHETIC_DATASET_EXPANSION.md](/D:/Project%20cua%20Dat/vilegal-agent/docs/TRACK_A_SYNTHETIC_DATASET_EXPANSION.md) and [docs/TRACK_A_SYNTHETIC_DATASET_QUALITY_REPORT.md](/D:/Project%20cua%20Dat/vilegal-agent/docs/TRACK_A_SYNTHETIC_DATASET_QUALITY_REPORT.md).

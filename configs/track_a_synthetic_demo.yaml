@@ -20,6 +20,17 @@ generation:
   default_output_path: "artifacts/track_a_synthetic_demo/qa_pairs.synthetic-demo.jsonl"
   tracked_sample_path: "data/synthetic_demo/sample_qa.jsonl"
 
+audit:
+  minimum_row_count: 2500
+  default_report_path: "artifacts/track_a_synthetic_demo/audit_report.json"
+
+split:
+  seed: 42
+  train_ratio: 0.8
+  validation_ratio: 0.1
+  test_ratio: 0.1
+  default_output_dir: "artifacts/track_a_synthetic_demo/splits"
+
 metadata:
   source: "synthetic-demo"
   legal_ground_truth: false

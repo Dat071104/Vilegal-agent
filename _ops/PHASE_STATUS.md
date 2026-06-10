@@ -1,12 +1,13 @@
 # Phase Status
 
-**Current phase:** Track A0/A1 - Synthetic Demo Foundation  
-**Current verdict:** PASS - SYNTHETIC DEMO FOUNDATION READY
+**Current phase:** Track A1.5 - Synthetic Dataset Expansion + Quality Audit  
+**Current verdict:** PASS - SYNTHETIC DATASET EXPANSION AUDITED
 
 ## Current readiness flags
 
 - `phase3_scaffold_ready=true`
 - `track_a_synthetic_demo_foundation_ready=true`
+- `track_a_synthetic_dataset_audit_ready=true`
 - `qa_generation_ready=false`
 - `fine_tuning_ready=false`
 - `rag_indexing_ready=false`
@@ -25,6 +26,7 @@
 | Phase 2M: Full Phase 3 readiness audit | PASS - PHASE 3 READY FOR SCAFFOLD ONLY | 2026-06-10 |
 | Phase 2N: Roadmap and risk correction patch | PASS | 2026-06-10 |
 | Track A0/A1: Synthetic demo foundation | PASS - SYNTHETIC DATA ONLY | 2026-06-10 |
+| Track A1.5: Synthetic dataset expansion + quality audit | PASS - ARTIFACTS ONLY | 2026-06-10 |
 | Track A2: Kaggle synthetic fine-tune demo | NOT STARTED - SYNTHETIC ONLY | - |
 | Phase 3A: Kaggle/QLoRA scaffold only | PASS - VALIDATOR REQUIRED AND PASSED | 2026-06-10 |
 | Phase 3B: QA/SFT dataset gate design | NOT STARTED - DESIGN ONLY | - |
@@ -45,6 +47,7 @@
 - `CONFIRMED`: real QA generation, fine-tuning, RAG indexing, dataset publishing, real legal corpus use, legal-ground-truth promotion, and `approved_for_rag_index=true` remain blocked.
 - `CONFIRMED`: Track A synthetic demo branch exists for portfolio acceleration and does not change Track B safety gates.
 - `CONFIRMED`: synthetic demo data is not legal advice and not official legal text.
+- `CONFIRMED`: Track A1.5 expands the local synthetic dataset, audit, and split workflow under artifacts only.
 
 ## Candidate interpretation
 
@@ -459,3 +462,15 @@
 - Track A does not change Track B safety gates.
 - Future Track A2 may do a Kaggle fine-tune demo using synthetic data only.
 - Real legal corpus QA, SFT, and RAG remain blocked.
+
+## Track A1.5 - Synthetic Dataset Expansion + Quality Audit
+
+**Date:** 2026-06-10
+**Verdict:** PASS - ARTIFACTS ONLY
+
+- Added local audit and deterministic split tooling for the synthetic-demo dataset.
+- Generated the 2,500-row synthetic artifact locally under `artifacts/track_a_synthetic_demo/`.
+- Full synthetic artifact, audit report, and split files remain untracked.
+- Track A synthetic dataset remains synthetic-demo only and not legal advice.
+- Track A does not unblock Track B real QA, SFT, or RAG.
+- Next allowed Track A step is Track A2 Kaggle synthetic fine-tune demo using local synthetic split artifacts only.

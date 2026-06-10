@@ -38,6 +38,23 @@ class ValidationSummary:
     issues: tuple[ValidationIssue, ...] = field(default_factory=tuple)
 
 
+def load_jsonl_rows(path: str | Path) -> list[dict[str, object]]:
+    source = Path(path)
+    rows: list[dict[str, object]] = []
+    with source.open("r", encoding="utf-8") as handle:
+        for line_number, raw_line in enumerate(handle, start=1):
+            if not raw_line.strip():
+                continue
+            try:
+                payload = json.loads(raw_line)
+            except json.JSONDecodeError as exc:
+                raise ValueError(f"Invalid JSON on line {line_number}: {exc.msg}") from exc
+            if not isinstance(payload, dict):
+                raise ValueError(f"Row on line {line_number} must be a JSON object.")
+            rows.append(payload)
+    return rows
+
+
 def _read_text(value: object, *, field_name: str, allow_empty: bool = False) -> str:
     if not isinstance(value, str):
         raise ValueError(f"{field_name} must be a string.")
@@ -110,11 +127,11 @@ def validate_demo_row(payload: dict[str, object]) -> list[str]:
 
 
 def validate_jsonl_file(path: str | Path) -> ValidationSummary:
-    source = Path(path)
     total_rows = 0
     valid_rows = 0
     issues: list[ValidationIssue] = []
 
+    source = Path(path)
     with source.open("r", encoding="utf-8") as handle:
         for line_number, raw_line in enumerate(handle, start=1):
             if not raw_line.strip():
