@@ -1,0 +1,39 @@
+track: "A"
+name: "Synthetic Demo / Portfolio Track"
+mode: "synthetic_demo_only"
+
+safety:
+  use_real_legal_corpus: false
+  use_uts_vlc_candidates: false
+  use_corpus_candidate_manifest: false
+  mark_as_legal_ground_truth: false
+  approved_for_rag_index: false
+  allow_fine_tuning_in_this_phase: false
+  allow_rag_indexing_in_this_phase: false
+  require_synthetic_label: true
+
+generation:
+  target_total_pairs: 2500
+  default_dry_run: true
+  output_format: "jsonl"
+  schema: "alpaca_with_metadata"
+  default_output_path: "artifacts/track_a_synthetic_demo/qa_pairs.synthetic-demo.jsonl"
+  tracked_sample_path: "data/synthetic_demo/sample_qa.jsonl"
+
+audit:
+  minimum_row_count: 2500
+  default_report_path: "artifacts/track_a_synthetic_demo/audit_report.json"
+
+split:
+  seed: 42
+  train_ratio: 0.8
+  validation_ratio: 0.1
+  test_ratio: 0.1
+  default_output_dir: "artifacts/track_a_synthetic_demo/splits"
+
+metadata:
+  source: "synthetic-demo"
+  legal_ground_truth: false
+  approved_for_rag_index: false
+  intended_use: "portfolio-demo"
+  disclaimer: "Synthetic demo data only. Not legal advice. Not official legal text."

@@ -42,6 +42,11 @@ Stop condition:
 - May use synthetic QA and synthetic/legal-like fixtures.
 - May build a public demo, Kaggle fine-tune demo, benchmark table, screenshots, and CV evidence.
 - Must label all data as `synthetic-demo`.
+- Track A synthetic demo branch exists for portfolio acceleration.
+- Synthetic demo data is not legal advice and not official legal text.
+- Track A does not change Track B safety gates.
+- Track A1.5 adds local synthetic dataset expansion, audit, and split workflow under `artifacts/` only.
+- Future Track A2 may do a Kaggle fine-tune demo using synthetic data only.
 - Must not claim legal correctness, legal-ground-truth status, production readiness, or official legal advice.
 - Must not use `UTS_VLC` candidates or real candidate manifest as training/RAG ground truth.
 
@@ -51,6 +56,7 @@ Stop condition:
 - Phase 3B is QA/SFT dataset gate design.
 - Phase 3D or equivalent source viability decision is required before real QA/SFT/RAG.
 - Real QA generation, fine-tuning, RAG indexing, dataset publishing, real legal corpus use, legal-ground-truth promotion, and `approved_for_rag_index=true` remain blocked.
+- Track A synthetic demo work does not unblock Track B real QA, SFT, or RAG.
 
 ## Delivery risk
 
@@ -65,6 +71,9 @@ Mitigation: run Track A synthetic demo branch separately from Track B governance
 | Phase 0: Project Bootstrap Structure | Complete |
 | Phase 1: Data Source Audit & Scaffolding | Complete with risks |
 | Phase 2N: Roadmap and Risk Correction Patch | Complete |
+| Track A0/A1: Synthetic demo foundation | Complete on `phase/demo-synthetic-track` only |
+| Track A1.5: Synthetic dataset expansion + quality audit | Complete on `phase/demo-synthetic-track` only |
+| Track A2: Kaggle synthetic fine-tune demo | Planned |
 | Phase 3A: Kaggle/QLoRA scaffold | Complete only if validator passes |
 | Phase 3B: QA/SFT dataset gate design | Planned |
 | Phase 3D: Source viability decision | Required before real QA/SFT/RAG |
