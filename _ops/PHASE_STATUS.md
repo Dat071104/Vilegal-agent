@@ -1,7 +1,15 @@
 # Phase Status
 
-**Current phase:** Phase 2M - Full Phase 3 Readiness Audit  
-**Current verdict:** PHASE 3 READY FOR SCAFFOLD ONLY
+**Current phase:** Phase 2N - Roadmap and Risk Correction Patch  
+**Current verdict:** PASS - PHASE 3 READY FOR SCAFFOLD ONLY
+
+## Current readiness flags
+
+- `phase3_scaffold_ready=true`
+- `qa_generation_ready=false`
+- `fine_tuning_ready=false`
+- `rag_indexing_ready=false`
+- `approved_for_rag_index=true` remains blocked and must stay unset.
 
 ## Phase gates
 
@@ -10,20 +18,38 @@
 | Phase 0: Project bootstrap structure | PASS | 2026-06-09 |
 | Phase 1: Data source audit and scaffolding | PASS WITH RISKS | 2026-06-09 |
 | Phase 2: Data pipeline and processing | PASS WITH RISKS | 2026-06-10 |
-| Phase 3: RAG knowledge base | NOT STARTED | - |
-| Phase 4: Fine-tuning | NOT STARTED | - |
+| Phase 2M: Full Phase 3 readiness audit | PASS - PHASE 3 READY FOR SCAFFOLD ONLY | 2026-06-10 |
+| Phase 2N: Roadmap and risk correction patch | PASS | 2026-06-10 |
+| Phase 3A: Kaggle/QLoRA scaffold only | READY FOR SCAFFOLD ONLY | 2026-06-10 |
+| Phase 3B: QA/SFT dataset gate design | NOT STARTED - DESIGN ONLY | - |
+| Phase 3D: Source viability decision | REQUIRED BEFORE REAL QA/SFT/RAG | - |
+| Phase 3: RAG knowledge base | BLOCKED FOR REAL DATA | - |
+| Phase 4: Fine-tuning | BLOCKED FOR REAL DATA | - |
 | Phase 5: Agent orchestration | NOT STARTED | - |
 | Phase 6: Evaluation and deployment | NOT STARTED | - |
 
-## Phase 1 gate result
+## Phase 2M interpretation carried forward
 
 - `CONFIRMED`: the prior stale license claims were corrected during the big audit.
 - `CONFIRMED`: the current Hugging Face card labels are `MIT` for `undertheseanlp/UTS_VLC` and `CC-BY-4.0` for both `th1nhng0/vietnamese-legal-documents` and `duyet/vietnamese-legal-instruct`.
 - `CONFIRMED`: generated instruction and QA datasets are not treated as legal ground truth in the updated audit docs.
 - `NEEDS MANUAL REVIEW`: non-synthetic source provenance and relicensing remain unresolved.
-- `CONFIRMED`: Phase 2 bulk download is blocked.
-- Phase 2 sample-only ingestion planning: **GO**
-- Phase 2 implementation: **DO NOT START YET**
+- `CONFIRMED`: Phase 3 ready means Phase 3A scaffold-only. It does not mean ready for QA generation, fine-tuning, RAG/vector indexing, dataset publishing, or legal-ground-truth use.
+- `CONFIRMED`: real QA generation, fine-tuning, RAG indexing, dataset publishing, legal-ground-truth promotion, and `approved_for_rag_index=true` remain blocked.
+
+## Candidate interpretation
+
+- The 150 accepted candidates are sample-scope accepted-for-later-review rows only.
+- They are not enough for meaningful SFT.
+- They are not approved for RAG.
+- They are not legal ground truth.
+- They are not approved for dataset publishing.
+
+## UTS_VLC viability stop condition
+
+- Risk: `UTS_VLC` may be non-viable for downstream SFT/RAG.
+- Evidence: 300/300 sampled records typed as `other`; 300/300 sampled records missing `document_number`; 299/300 sampled records contain multiple article markers; parser produced 20,393 derived candidates but only 150 accepted-for-later-review candidates; acceptance rate is approximately 0.73%, suggesting a document-level source mismatch for downstream article-level SFT/RAG.
+- If an expanded source viability sample still has acceptance rate below 2-5%, or `document_number` and legal metadata remain largely missing, freeze `UTS_VLC` for downstream SFT/RAG and treat it only as a governance/audit case study unless a future human approval gate overrides this.
 
 ## Phase 1 Reproducibility Patch
 

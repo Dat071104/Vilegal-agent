@@ -1,6 +1,6 @@
 # Risk Register
 
-This register tracks the current Phase 1 audit risks and assumptions.
+This register tracks the current governance, roadmap, and source viability risks.
 
 | ID | Date | Phase | Risk or assumption | Classification | Mitigation or action | Status |
 |---|---|---|---|---|---|---|
@@ -34,3 +34,5 @@ This register tracks the current Phase 1 audit risks and assumptions.
 | R28 | 2026-06-10 | P2L | If the sample-scope and bulk-review limitations are not documented clearly, Phase 3 planning can over-assume corpus quality and legal readiness. | CONFIRMED | Require documented sample-scope and bulk-review limitation checks before setting `phase3_scaffold_ready=true`. | OPEN |
 | R29 | 2026-06-10 | P2M | Teams may interpret "Phase 3 ready for scaffold only" as permission to start hidden training or indexing work in notebooks or local experiments. | CONFIRMED | Restrict the next step to Phase 3A scaffold artifacts only and restate the ban on training, QA generation, and RAG indexing until a later downstream gate explicitly approves them. | OPEN |
 | R30 | 2026-06-10 | P2M | The current reviewed manifest can still overstate legal/data readiness because broader provenance and relicensing questions remain unresolved for full downstream deployment. | CONFIRMED | Keep public release, broad redistribution, and execution-stage Phase 3 work blocked until later corpus-review and legal-risk gates are completed. | OPEN |
+| R31 | 2026-06-10 | P2N | Risk: UTS_VLC may be non-viable for downstream SFT/RAG. Evidence: 300/300 sampled records typed as `other`; 300/300 sampled records missing `document_number`; 299/300 sampled records contain multiple article markers; parser produced 20,393 derived candidates but only 150 accepted-for-later-review candidates; acceptance rate is approximately 0.73%, suggesting a document-level source mismatch for downstream article-level SFT/RAG. | CONFIRMED | Preserve the scaffold-only boundary. If an expanded source viability sample still has acceptance rate below 2-5%, or `document_number` and legal metadata remain largely missing, freeze `UTS_VLC` for downstream SFT/RAG and treat it only as a governance/audit case study unless a future human approval gate overrides this. | OPEN |
+| R32 | 2026-06-10 | P2N | Risk: A purely linear governance pipeline may produce strong docs/tests but no public demo artifact in time for portfolio/CV use. | CONFIRMED | Mitigation: run Track A synthetic demo branch separately from Track B governance. Keep all synthetic outputs labeled `synthetic-demo` and isolated from the real-corpus approval path. | OPEN |

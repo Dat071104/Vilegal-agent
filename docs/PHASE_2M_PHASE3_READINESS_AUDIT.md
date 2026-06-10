@@ -1,7 +1,14 @@
 # Phase 2M Phase 3 Readiness Audit
 
 **Date:** 2026-06-10  
-**Final verdict:** PHASE 3 READY FOR SCAFFOLD ONLY
+**Final verdict:** `PHASE 3 READY FOR SCAFFOLD ONLY`
+
+## Readiness flags
+- `phase3_scaffold_ready=true`
+- `qa_generation_ready=false`
+- `fine_tuning_ready=false`
+- `rag_indexing_ready=false`
+- All downstream approval counts remain `0`.
 
 ## Scope
 
@@ -112,6 +119,32 @@ Confirmed throughout this run:
 - Phase 3 is not marked ready for execution.
 - The only allowed Phase 3 follow-up is scaffold-only planning.
 
+## Boundary
+
+- Phase 3 ready means Phase 3A scaffold-only.
+- It does not mean ready for QA generation, fine-tuning, RAG/vector indexing, dataset publishing, or legal-ground-truth use.
+- No QA generation, no fine-tuning, no RAG/vector indexing, no dataset publishing, no legal-ground-truth promotion, and no `approved_for_rag_index=true`.
+
+## Candidate interpretation
+
+- Current corpus candidate manifest has 150 accepted-for-later-review candidates across 128 unique parent documents with provenance coverage `1.0`.
+- The 150 accepted candidates are sample-scope accepted-for-later-review rows only.
+- They are not enough for meaningful SFT, not approved for RAG, not legal ground truth, and not approved for dataset publishing.
+
+## Source viability warning
+
+Risk: UTS_VLC may be non-viable for downstream SFT/RAG.
+
+Evidence:
+- 300/300 sampled records typed as `other`.
+- 300/300 sampled records missing `document_number`.
+- 299/300 sampled records contain multiple article markers.
+- Parser produced 20,393 derived candidates but only 150 accepted-for-later-review candidates.
+- Acceptance rate is approximately 0.73%, suggesting a document-level source mismatch for downstream article-level SFT/RAG.
+
+Stop condition:
+- If an expanded source viability sample still has acceptance rate below 2-5%, or `document_number` and legal metadata remain largely missing, freeze `UTS_VLC` for downstream SFT/RAG and treat it only as a governance/audit case study unless a future human approval gate overrides this.
+
 ## Final Decision
 
 ### Why `PHASE 3 READY FOR SCAFFOLD ONLY`
@@ -163,23 +196,3 @@ This does not allow:
 - complete a later RAG-index approval gate;
 - preserve attribution and provenance controls for downstream artifacts;
 - keep legal/data-risk acceptance explicit before any public or model-release step.
-
-## Validation Commands
-
-```bash
-python -m compileall src scripts -q
-python -m pytest tests -v
-git status --short
-```
-
-## Safe Git Add Command
-
-```bash
-git add docs/PHASE_2M_PHASE3_READINESS_AUDIT.md docs/PHASE_2_PRE_AUDIT.md docs/ROADMAP.md README.md _ops/IMPLEMENTATION_LOG.md _ops/PHASE_STATUS.md _ops/RISK_REGISTER.md
-```
-
-## Commit Message Suggestion
-
-```text
-docs: add phase 2m phase 3 readiness audit
-```
