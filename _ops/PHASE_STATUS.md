@@ -1,7 +1,7 @@
 # Phase Status
 
-**Current phase:** Phase 2 - Data Pipeline and Processing  
-**Current verdict:** PASS WITH RISKS
+**Current phase:** Phase 2I - Human Review Results Schema + Adjudication Workflow  
+**Current verdict:** PASS
 
 ## Phase gates
 
@@ -172,4 +172,69 @@
   - `approved_for_rag_index_true_count = 0`
   - `is_legal_ground_truth_true_count = 0`
 - Phase 3 remains blocked.
-- Recommendation: Phase 2H is not started in this repo state; any later manual review pack requires separate approval.
+- Recommendation: use the Phase 2G outputs only through the Phase 2H manual-review pack; Phase 3 remains blocked.
+
+## Phase 2H - Manual Review Pack / Sampling Audit
+
+**Date:** 2026-06-10
+**Verdict:** PASS WITH RISKS
+
+- Deterministic Phase 2H review sampler added for existing Phase 2G outputs only.
+- Measured review-pack output:
+  - `20,393` total available candidates
+  - `150` sampled rows
+  - `duplicate_related=10`
+  - `suspicious_length=10`
+  - `keep_candidate_for_human_review=60`
+  - `needs_review=50`
+  - `rejected=20`
+  - `128` distinct parent documents covered
+  - `128` distinct `source_id` values covered
+  - `approved_for_rag_index_true_count = 0`
+  - `is_legal_ground_truth_true_count = 0`
+- Generated review artifacts stay under ignored `artifacts/phase_2h_manual_review_pack/`.
+- Review rubric created in `docs/MANUAL_REVIEW_RUBRIC.md`.
+- Phase 3 remains blocked.
+- Recommendation: proceed only to a future Phase 2I human-review results schema or adjudication workflow, not to Phase 3.
+
+## Phase 2I - Human Review Results Schema + Adjudication Workflow
+
+**Date:** 2026-06-10
+**Verdict:** PASS
+
+- Added a deterministic review-results validator for the Phase 2H
+  `reviewer_decision_template.csv` workflow.
+- Accepted decision labels are enforced:
+  - `accept_for_later_corpus_candidate`
+  - `reject_not_article`
+  - `reject_duplicate`
+  - `reject_too_short`
+  - `reject_too_long`
+  - `reject_missing_metadata`
+  - `needs_legal_expert_review`
+  - `needs_parser_fix`
+  - `uncertain`
+- Accepted confidence values are enforced: `high`, `medium`, `low`.
+- Required review fields are enforced:
+  - `reviewer_id`
+  - `review_date`
+  - `candidate_id`
+  - `decision_label`
+  - `confidence`
+  - `notes`
+  - `legal_ground_truth_approved`
+  - `rag_index_approved`
+- Safety guards remain fail-closed:
+  - `legal_ground_truth_approved` must remain `false`
+  - `rag_index_approved` must remain `false`
+- Candidate-level adjudication statuses are now defined:
+  - `consensus`
+  - `parser_fix_required`
+  - `legal_expert_review_required`
+  - `uncertain_requires_adjudication`
+  - `label_conflict_requires_adjudication`
+- No QA generation.
+- No fine-tuning.
+- No RAG or vector indexing.
+- No automatic legal-ground-truth promotion.
+- **Phase 3 remains blocked. Stop after Phase 2I unless explicitly instructed to continue.**

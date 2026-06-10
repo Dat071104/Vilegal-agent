@@ -120,6 +120,19 @@ These metrics must be measured before any bulk ingestion is approved:
 - Phase 2G implementation: **COMPLETE - PASS WITH RISKS**
   - Deterministic review-labeling layer created for Phase 2F candidates.
   - No candidate is approved for RAG or marked as legal ground truth.
-  - Measured run results: `20,393` inputs, `212` rejected, `20,181` needs review, `0` keep candidates, `339` duplicate hash groups.
+  - Measured run results: `20,393` inputs, `511` rejected, `3,249` needs review, `16,633` keep candidates, `339` duplicate hash groups, `490` duplicate candidates rejected, `87` suspicious-length candidates.
+  - Parent document warnings are preserved as metadata only and do not automatically force `needs_review`.
+  - Phase 3 remains blocked.
+- Phase 2H implementation: **COMPLETE - PASS WITH RISKS**
+  - Deterministic manual-review sampling pack created from the existing Phase 2G outputs only.
+  - Measured run results: `150` sampled rows, `128` parent documents covered, full bucket coverage with no shortfall, `approved_for_rag_index_true_count = 0`, `is_legal_ground_truth_true_count = 0`.
+  - Review outputs remain under ignored `artifacts/` only.
+  - Human review is still required before any later corpus-candidate gate.
+  - Phase 3 remains blocked.
+- Phase 2I implementation: **COMPLETE - PASS**
+  - Human-review results schema and validator created for the Phase 2H reviewer template.
+  - Accepted decision labels and confidence values are now enforced centrally.
+  - `legal_ground_truth_approved` and `rag_index_approved` are fail-closed and must remain `false`.
+  - Candidate-level adjudication states are defined, but no corpus, RAG, QA, or Phase 3 approval is granted.
   - Phase 3 remains blocked.
 

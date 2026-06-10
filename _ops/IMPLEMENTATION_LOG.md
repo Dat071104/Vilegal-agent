@@ -189,4 +189,39 @@ No Phase 2 implementation work was started in this audit turn.
 
 **Phase 2G result:** PASS WITH RISKS
 
+## Phase 2H - Manual Review Pack / Sampling Audit (2026-06-10)
+
+| Step | Time | Action | Status |
+|---|---|---|---|
+| 1 | 2026-06-10T02:05 | Re-checked repo path, current branch, git status, and Phase 2G artifact presence before Phase 2H work started. | PASS |
+| 2 | 2026-06-10T02:07 | Re-read Phase 2E/2F/2G docs, ops files, article filter code, and Phase 2G output schema. | PASS |
+| 3 | 2026-06-10T02:12 | Added `src/vilegal/ingestion/review_sampler.py` for deterministic, bucketed manual-review sampling with artifacts-only output expectations. | PASS |
+| 4 | 2026-06-10T02:13 | Added `scripts/build_phase2h_review_pack.py` with artifacts-path safety checks and Phase 2G input validation. | PASS |
+| 5 | 2026-06-10T02:15 | Added `tests/test_review_sampler.py` covering determinism, stratification, shortfalls, safety flags, required fields, path safety, missing inputs, doc hygiene, reconciliation, and duplicate/suspicious bucket coverage. | PASS |
+| 6 | 2026-06-10T02:16 | Created `docs/PHASE_2H_MANUAL_REVIEW_PACK.md` and `docs/MANUAL_REVIEW_RUBRIC.md` without embedding real candidate text. | PASS |
+| 7 | 2026-06-10T02:17 | Ran `python -m compileall src scripts -q`. | PASS |
+| 8 | 2026-06-10T02:18 | Ran `python -m pytest tests/test_review_sampler.py -v` and fixed one doc-line-length failure to keep docs structural-only. | PASS |
+| 9 | 2026-06-10T02:20 | Re-ran `python -m pytest tests/test_review_sampler.py -v` and got `10/10 PASS`. | PASS |
+| 10 | 2026-06-10T02:22 | Ran `python scripts/build_phase2h_review_pack.py --input-dir artifacts/phase_2g_uts_filtering --output-dir artifacts/phase_2h_manual_review_pack --sample-size 150 --seed 42`. | PASS |
+| 11 | 2026-06-10T02:23 | Measured Phase 2H output: `150` sampled rows, `128` parent documents covered, full requested bucket coverage, no RAG or ground-truth promotion. | PASS |
+| 12 | 2026-06-10T02:24 | Updated Phase 2 docs, risk register, and status records to reflect Phase 2H results and ongoing Phase 3 block. | PASS |
+
+**Phase 2H result:** PASS WITH RISKS
+
+## Phase 2I - Human Review Results Schema + Adjudication Workflow (2026-06-10)
+
+| Step | Time | Action | Status |
+|---|---|---|---|
+| 1 | 2026-06-10T10:05 | Re-read Phase 2H docs, review template schema, ops files, and ingestion/test patterns before implementing review-result validation. | PASS |
+| 2 | 2026-06-10T10:10 | Added `src/vilegal/ingestion/review_results.py` with required-field checks, allowed label enforcement, confidence validation, false-only approval flags, decision counts, invalid-row reporting, and candidate-level adjudication states. | PASS |
+| 3 | 2026-06-10T10:12 | Added `scripts/validate_review_results.py` for local CSV validation and optional JSON reporting. | PASS |
+| 4 | 2026-06-10T10:15 | Added `tests/test_review_results.py` using synthetic CSV fixtures only. | PASS |
+| 5 | 2026-06-10T10:18 | Created `docs/PHASE_2I_REVIEW_RESULTS_WORKFLOW.md` and updated Phase 2 status, risk, and pre-audit records. | PASS |
+| 6 | 2026-06-10T10:20 | Ran `python -m compileall src scripts -q`. | PASS |
+| 7 | 2026-06-10T10:22 | Ran `python -m pytest tests -v`. | PASS |
+| 8 | 2026-06-10T10:23 | Ran `python -m pytest tests/test_review_results.py -v`. | PASS |
+| 9 | 2026-06-10T10:24 | Ran `git status --short` and confirmed no files under `artifacts/` are staged. | PASS |
+
+**Phase 2I result:** PASS
+
 
