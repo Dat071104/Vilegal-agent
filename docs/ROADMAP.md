@@ -46,7 +46,12 @@ Stop condition:
 - Synthetic demo data is not legal advice and not official legal text.
 - Track A does not change Track B safety gates.
 - Track A1.5 adds local synthetic dataset expansion, audit, and split workflow under `artifacts/` only.
-- Future Track A2 may do a Kaggle fine-tune demo using synthetic data only.
+- Track A2 adds a Kaggle synthetic fine-tune demo using local synthetic split artifacts only.
+  - Synthetic-demo data only — no real legal corpus, no UTS_VLC, no corpus_candidate_manifest.
+  - Full synthetic dataset remains an artifact, not committed.
+  - Model/adapters/checkpoints are not committed.
+  - Track A2 does not unblock Track B real legal QA/SFT/RAG.
+  - Any public demo must preserve the synthetic-only disclaimer.
 - Must not claim legal correctness, legal-ground-truth status, production readiness, or official legal advice.
 - Must not use `UTS_VLC` candidates or real candidate manifest as training/RAG ground truth.
 
@@ -73,7 +78,7 @@ Mitigation: run Track A synthetic demo branch separately from Track B governance
 | Phase 2N: Roadmap and Risk Correction Patch | Complete |
 | Track A0/A1: Synthetic demo foundation | Complete on `phase/demo-synthetic-track` only |
 | Track A1.5: Synthetic dataset expansion + quality audit | Complete on `phase/demo-synthetic-track` only |
-| Track A2: Kaggle synthetic fine-tune demo | Planned |
+| Track A2: Kaggle synthetic fine-tune demo | Complete on `phase/track-a2-kaggle-synthetic-finetune` — synthetic-demo only |
 | Phase 3A: Kaggle/QLoRA scaffold | Complete only if validator passes |
 | Phase 3B: QA/SFT dataset gate design | Planned |
 | Phase 3D: Source viability decision | Required before real QA/SFT/RAG |

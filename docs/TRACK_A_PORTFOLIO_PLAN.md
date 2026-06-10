@@ -11,13 +11,20 @@ Show a complete AI engineering demo path that includes synthetic dataset design,
 - Larger local synthetic artifact generation path under `artifacts/`.
 - Portfolio screenshots of dataset rows, validation output, and demo workflow.
 - README section describing Track A mechanics and Track B governance separation.
+- **Track A2:** Kaggle synthetic fine-tune demo notebook, dataset packaging script, validator, tests, and docs.
+  - Synthetic fine-tune of a small instruct model on synthetic-demo data (Kaggle-only).
+  - Benchmark comparison: base vs LoRA adapter on synthetic test set.
+  - Screenshot evidence from Kaggle notebook run.
+  - Benchmark JSON exported from `/kaggle/working/`.
+  - `SYNTHETIC DEMO ONLY — NOT LEGAL ADVICE` disclaimer on all outputs.
 
 ## Suggested README screenshots section
 
 - Synthetic sample preview table.
 - Validator PASS output screenshot.
 - Dry-run generator output screenshot.
-- Optional future Kaggle notebook screenshot for Track A2.
+- Track A2 Kaggle notebook screenshot (training loss curve + benchmark table).
+- Benchmark JSON screenshot from `/kaggle/working/track_a_benchmark_results.json`.
 
 ## Suggested benchmark table structure
 
@@ -25,7 +32,7 @@ Show a complete AI engineering demo path that includes synthetic dataset design,
 |---|---|---|
 | Synthetic generator | rows generated | Track A only |
 | Synthetic validator | valid/invalid rows | Fail-closed safety checks |
-| Future Track A2 fine-tune demo | training loss / eval proxy | Synthetic data only |
+| Track A2 fine-tune demo | training loss / eval proxy | Synthetic data only — not legal accuracy |
 | Future Track A3 retrieval demo | canned QA accuracy | Synthetic retrieval corpus only |
 
 ## Suggested CV bullet points

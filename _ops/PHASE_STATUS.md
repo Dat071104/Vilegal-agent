@@ -1,13 +1,14 @@
 # Phase Status
 
-**Current phase:** Track A1.5 - Synthetic Dataset Expansion + Quality Audit  
-**Current verdict:** PASS - SYNTHETIC DATASET EXPANSION AUDITED
+**Current phase:** Track A2 - Kaggle Synthetic Fine-Tune Demo  
+**Current verdict:** PASS - SYNTHETIC FINE-TUNE DEMO IMPLEMENTED
 
 ## Current readiness flags
 
 - `phase3_scaffold_ready=true`
 - `track_a_synthetic_demo_foundation_ready=true`
 - `track_a_synthetic_dataset_audit_ready=true`
+- `track_a_kaggle_finetune_demo_ready=true`
 - `qa_generation_ready=false`
 - `fine_tuning_ready=false`
 - `rag_indexing_ready=false`
@@ -27,7 +28,7 @@
 | Phase 2N: Roadmap and risk correction patch | PASS | 2026-06-10 |
 | Track A0/A1: Synthetic demo foundation | PASS - SYNTHETIC DATA ONLY | 2026-06-10 |
 | Track A1.5: Synthetic dataset expansion + quality audit | PASS - ARTIFACTS ONLY | 2026-06-10 |
-| Track A2: Kaggle synthetic fine-tune demo | NOT STARTED - SYNTHETIC ONLY | - |
+| Track A2: Kaggle synthetic fine-tune demo | PASS - SYNTHETIC ONLY | 2026-06-10 |
 | Phase 3A: Kaggle/QLoRA scaffold only | PASS - VALIDATOR REQUIRED AND PASSED | 2026-06-10 |
 | Phase 3B: QA/SFT dataset gate design | NOT STARTED - DESIGN ONLY | - |
 | Phase 3D: Source viability decision | REQUIRED BEFORE REAL QA/SFT/RAG | - |
@@ -474,3 +475,31 @@
 - Track A synthetic dataset remains synthetic-demo only and not legal advice.
 - Track A does not unblock Track B real QA, SFT, or RAG.
 - Next allowed Track A step is Track A2 Kaggle synthetic fine-tune demo using local synthetic split artifacts only.
+
+## Track A2 - Kaggle Synthetic Fine-Tune Demo
+
+**Date:** 2026-06-10
+**Verdict:** PASS - SYNTHETIC FINE-TUNE DEMO IMPLEMENTED
+
+- Added Kaggle fine-tune demo notebook, dataset packaging script, validator, tests, and governance documentation.
+- `configs/track_a_kaggle_finetune_demo.yaml` added with all safety flags set correctly.
+- `notebooks/track_a_kaggle_synthetic_finetune_demo.ipynb` added — valid JSON, synthetic-only.
+- `scripts/prepare_kaggle_synthetic_dataset.py` added — packages splits for Kaggle upload.
+- `scripts/validate_track_a_kaggle_demo.py` added — validates config + notebook safety.
+- `tests/test_track_a_kaggle_demo.py` added — 13 test coverage areas.
+- `docs/TRACK_A_KAGGLE_SYNTHETIC_FINETUNE.md` added — full runbook.
+- `docs/TRACK_A_BENCHMARK_PLAN.md` added — benchmark methodology and portfolio checklist.
+- Safety confirmation:
+  - `use_real_legal_corpus=false` (confirmed)
+  - `use_uts_vlc_candidates=false` (confirmed)
+  - `use_corpus_candidate_manifest=false` (confirmed)
+  - `mark_as_legal_ground_truth=false` (confirmed)
+  - `approved_for_rag_index=false` (confirmed)
+  - `allow_local_training=false` (confirmed)
+  - `allow_kaggle_training=true` (Kaggle-only)
+  - `allow_hub_push_by_default=false` (confirmed)
+- Full 2,500-row synthetic dataset remains an artifact, not committed.
+- Model/adapters/checkpoints are not committed.
+- Track A2 does not unblock Track B real legal QA/SFT/RAG.
+- Any public demo must preserve the synthetic-only disclaimer.
+- Next allowed Track A step: Track A3 public portfolio packaging.
