@@ -6,7 +6,7 @@ This document reflects the audited safe path, not the original aspirational road
 - [x] **Phase 1: Data Source Audit & Scaffolding**
 - [x] **Phase 2: Data Pipeline & Processing (through 2M readiness audit)**
 - [ ] **Phase 3: RAG Knowledge Base**
-  Phase 3 execution remains blocked. Only Phase 3A scaffold planning is currently allowed.
+  Phase 3 execution remains blocked. Only Phase 3A scaffold-only work is currently allowed, and Phase 3A is completed only if the scaffold validator passes.
 - [ ] **Phase 4: Fine-tuning (QLoRA) (blocked)**
 - [ ] **Phase 5: LangGraph Agent Orchestration (blocked)**
 - [ ] **Phase 6: Evaluation & Deployment (blocked)**
@@ -20,6 +20,7 @@ This document records the current post-Phase-2M and Phase-2N roadmap posture.
 - `fine_tuning_ready=false`
 - `rag_indexing_ready=false`
 - Phase 3 ready means Phase 3A scaffold-only. It does not mean ready for QA generation, fine-tuning, RAG/vector indexing, dataset publishing, or legal-ground-truth use.
+- Phase 3A completion requires the scaffold validator to pass before the scaffold can be treated as complete.
 - The 150 accepted candidates are sample-scope accepted-for-later-review rows only. They are not enough for meaningful SFT, not approved for RAG, not legal ground truth, and not approved for dataset publishing.
 
 ## Source viability concern
@@ -46,10 +47,10 @@ Stop condition:
 
 ## Track B - Governance / Real Legal Corpus Track
 - Continues the current safety-gated legal data pipeline.
-- Phase 3A is Kaggle/QLoRA scaffold only.
+- Phase 3A is Kaggle/QLoRA scaffold only and validator-gated.
 - Phase 3B is QA/SFT dataset gate design.
 - Phase 3D or equivalent source viability decision is required before real QA/SFT/RAG.
-- Real QA generation, fine-tuning, RAG indexing, dataset publishing, legal-ground-truth promotion, and `approved_for_rag_index=true` remain blocked.
+- Real QA generation, fine-tuning, RAG indexing, dataset publishing, real legal corpus use, legal-ground-truth promotion, and `approved_for_rag_index=true` remain blocked.
 
 ## Delivery risk
 
@@ -64,7 +65,7 @@ Mitigation: run Track A synthetic demo branch separately from Track B governance
 | Phase 0: Project Bootstrap Structure | Complete |
 | Phase 1: Data Source Audit & Scaffolding | Complete with risks |
 | Phase 2N: Roadmap and Risk Correction Patch | Complete |
-| Phase 3A: Kaggle/QLoRA scaffold | Allowed |
+| Phase 3A: Kaggle/QLoRA scaffold | Complete only if validator passes |
 | Phase 3B: QA/SFT dataset gate design | Planned |
 | Phase 3D: Source viability decision | Required before real QA/SFT/RAG |
 | Real QA generation / fine-tuning / RAG / publishing | Blocked |
