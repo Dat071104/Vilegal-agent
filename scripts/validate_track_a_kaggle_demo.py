@@ -249,9 +249,27 @@ def check_config(errors: list[str]) -> None:
                         f"expected {expected_value!r}"
                     )
 
+    runtime = cfg.get("runtime", {})
+    if not isinstance(runtime, dict):
+        errors.append("[CONFIG] 'runtime' section is missing or malformed.")
+    else:
+        required_runtime = {
+            "target_platform": "kaggle",
+            "require_gpu": True,
+            "require_internet_for_model_download": True,
+            "local_training_allowed": False,
+            "output_adapter_dir": "/kaggle/working/vilegal-synthetic-demo-adapter",
+            "benchmark_output": "/kaggle/working/track_a_benchmark_results.json",
+        }
+        for k, v in required_runtime.items():
+            actual = runtime.get(k)
+            if actual != v:
+                errors.append(f"[CONFIG] runtime.{k} = {actual!r}, expected {v!r}")
+
     print(f"  [CONFIG] Loaded: {CONFIG_PATH.name}")
     print(f"  [CONFIG] Safety flags checked: {len(REQUIRED_CONFIG_FLAGS)}")
     print(f"  [CONFIG] Model target checked: {REQUIRED_PRIMARY_MODEL}")
+
 
 
 def check_notebook_exists_and_valid_json(errors: list[str]) -> dict[str, object] | None:
@@ -326,6 +344,30 @@ def check_notebook_no_active_hub_push(nb: dict[str, object], errors: list[str]) 
         print("  [NOTEBOOK] No active push_to_hub( call found.")
 
 
+def check_notebook_unsloth_runtime(nb: dict[str, object], errors: list[str]) -> None:
+    """Check that the notebook contains the Unsloth 7B QLoRA runtime requirements."""
+    code_text = _notebook_code_source_text(nb)
+    required_patterns = [
+        "FastLanguageModel.from_pretrained",
+        "load_in_4bit=True",
+        'use_gradient_checkpointing="unsloth"',
+        "SFTTrainer",
+        "unsloth/Qwen2.5-7B-Instruct",
+    ]
+    for pattern in required_patterns:
+        if pattern not in code_text:
+            errors.append(f"[NOTEBOOK] Required Unsloth runtime pattern not found in code cells: {pattern!r}")
+    
+    # Check that model profiles tiers are explained
+    lowered = _notebook_source_text(nb).lower()
+    if "7b is the flagship kaggle target" not in lowered:
+        errors.append("[NOTEBOOK] Model profile tier '7b is the flagship kaggle target' description missing.")
+    if "3b is the local/dev baseline" not in lowered:
+        errors.append("[NOTEBOOK] Model profile tier '3b is the local/dev baseline' description missing.")
+    if "0.5b is smoke-test only" not in lowered:
+        errors.append("[NOTEBOOK] Model profile tier '0.5b is smoke-test only' description missing.")
+
+
 def check_docs(errors: list[str]) -> None:
     """Check 7: Docs mention required synthetic-only phrases."""
     # Combine all doc text
@@ -376,13 +418,15 @@ def main(argv: list[str] | None = None) -> int:
     if nb is not None:
         nb_text = _notebook_source_text(nb)
 
-        print("\n[3/4] Checking notebook content (warnings + forbidden patterns)...")
+        print("\n[3/4] Checking notebook content (warnings + forbidden patterns + Unsloth runtime)...")
         check_notebook_warnings(nb, nb_text, errors)
         check_notebook_forbidden_patterns(nb, errors)
         check_notebook_no_active_hub_push(nb, errors)
+        check_notebook_unsloth_runtime(nb, errors)
     else:
         print("\n[3/4] Skipped notebook content checks (notebook unavailable).")
         errors.append("[NOTEBOOK] Notebook unavailable — content checks skipped.")
+
 
     print("\n[4/4] Checking docs...")
     check_docs(errors)

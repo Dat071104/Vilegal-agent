@@ -28,8 +28,9 @@ A portfolio-grade Vietnamese Legal AI Agent.
 - Synthetic demo data is not legal advice and not official legal text.
 - Track A does not change Track B safety gates.
 - Track A1.5 adds local synthetic dataset expansion, audit, and split workflow under `artifacts/` only.
-- Track A2 adds a Kaggle synthetic fine-tune demo using local synthetic split artifacts only.
+- Track A2/A2.2 adds a Kaggle synthetic fine-tune demo using local synthetic split artifacts only.
   - Allowed on `phase/track-a2-kaggle-synthetic-finetune` branch only.
+  - Implements an executable Unsloth 7B QLoRA runtime patch.
   - Uses `synthetic-demo` data only. Does NOT use UTS_VLC or corpus_candidate_manifest.
   - Primary flagship target: `unsloth/Qwen2.5-7B-Instruct` QLoRA on Kaggle.
   - Local/dev baseline: `Qwen/Qwen2.5-3B-Instruct` because the user can already run 3B locally.
@@ -65,7 +66,7 @@ A portfolio-grade Vietnamese Legal AI Agent.
 - **Phase 1:** Data Source Audit & Scaffolding (Complete)
 - **Phase 2:** Data Pipeline & Processing (Complete through 2M readiness audit)
 - **Phase 2N:** Roadmap and Risk Correction Patch (Complete)
-- **Track A2:** Kaggle Synthetic Fine-Tune Demo (Implemented — synthetic-demo data only)
+- **Track A2/A2.2:** Kaggle Synthetic Fine-Tune Unsloth 7B Runtime (Implemented — synthetic-demo data only)
 - **Phase 3:** RAG Knowledge Base (Phase 3A scaffold only allowed; validator-gated; execution blocked)
 - **Phase 4:** Fine-tuning (QLoRA) (Blocked)
 - **Phase 5:** LangGraph Agent Orchestration (Blocked)

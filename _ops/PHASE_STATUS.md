@@ -1,7 +1,7 @@
 # Phase Status
 
-**Current phase:** Track A2 - Kaggle Synthetic Fine-Tune Demo  
-**Current verdict:** PASS - SYNTHETIC FINE-TUNE DEMO IMPLEMENTED
+**Current phase:** Track A2.2 - Kaggle 7B Unsloth Runtime Patch  
+**Current verdict:** PASS - UNSLOTH 7B RUNTIME PATCH IMPLEMENTED
 
 ## Current readiness flags
 
@@ -28,7 +28,7 @@
 | Phase 2N: Roadmap and risk correction patch | PASS | 2026-06-10 |
 | Track A0/A1: Synthetic demo foundation | PASS - SYNTHETIC DATA ONLY | 2026-06-10 |
 | Track A1.5: Synthetic dataset expansion + quality audit | PASS - ARTIFACTS ONLY | 2026-06-10 |
-| Track A2: Kaggle synthetic fine-tune demo | PASS - SYNTHETIC ONLY | 2026-06-10 |
+| Track A2/A2.2: Kaggle Unsloth 7B Runtime Patch | PASS - SYNTHETIC ONLY | 2026-06-10 |
 | Phase 3A: Kaggle/QLoRA scaffold only | PASS - VALIDATOR REQUIRED AND PASSED | 2026-06-10 |
 | Phase 3B: QA/SFT dataset gate design | NOT STARTED - DESIGN ONLY | - |
 | Phase 3D: Source viability decision | REQUIRED BEFORE REAL QA/SFT/RAG | - |
@@ -477,15 +477,15 @@
 - Track A does not unblock Track B real QA, SFT, or RAG.
 - Next allowed Track A step is Track A2 Kaggle synthetic fine-tune demo using local synthetic split artifacts only.
 
-## Track A2 - Kaggle Synthetic Fine-Tune Demo
+## Track A2/A2.2 - Kaggle Unsloth 7B Runtime Patch
 
 **Date:** 2026-06-10
-**Verdict:** PASS - SYNTHETIC FINE-TUNE DEMO IMPLEMENTED
+**Verdict:** PASS - UNSLOTH 7B RUNTIME PATCH IMPLEMENTED
 
-- Added Kaggle fine-tune demo notebook, dataset packaging script, validator, tests, and governance documentation.
-- `configs/track_a_kaggle_finetune_demo.yaml` added with all safety flags set correctly.
-- `notebooks/track_a_kaggle_synthetic_finetune_demo.ipynb` added — valid JSON, synthetic-only.
-- Primary portfolio model target updated to `unsloth/Qwen2.5-7B-Instruct` for Kaggle QLoRA.
+- Added Kaggle fine-tune demo notebook using Unsloth 7B QLoRA runtime, dataset packaging script, validator, tests, and governance documentation.
+- `configs/track_a_kaggle_finetune_demo.yaml` updated to add runtime block with `target_platform: "kaggle"`, `local_training_allowed: false`, and output paths.
+- `notebooks/track_a_kaggle_synthetic_finetune_demo.ipynb` overwritten to implement Unsloth `FastLanguageModel.from_pretrained` (loading `unsloth/Qwen2.5-7B-Instruct` in 4-bit with gradient checkpointing) and `SFTTrainer` path.
+- Primary portfolio model target remains `unsloth/Qwen2.5-7B-Instruct` for Kaggle QLoRA.
 - `Qwen/Qwen2.5-3B-Instruct` documented as the local/dev baseline because the user can already run 3B locally.
 - `Qwen/Qwen2.5-0.5B-Instruct` retained only for smoke testing.
 - `scripts/prepare_kaggle_synthetic_dataset.py` added — packages splits for Kaggle upload.

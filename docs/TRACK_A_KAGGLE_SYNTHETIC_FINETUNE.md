@@ -8,17 +8,14 @@
 > No real legal corpus is used. No UTS_VLC candidates. No corpus manifest.
 > Track B real legal corpus governance remains **blocked**.
 
-Track A2 enables a Kaggle-hosted synthetic fine-tune demonstration using only the
-`synthetic-demo` data generated under Track A1.5. This is a portfolio AI engineering
-demo. It does not demonstrate legal correctness, legal-ground-truth capability, or
-real legal corpus training.
+Track A2.2 converts the Kaggle fine-tuning notebook into an executable Kaggle-only Unsloth 7B QLoRA runtime, while preserving all synthetic-only safety gates.
 
-The flagship Track A2 portfolio run is **Qwen2.5-7B QLoRA on Kaggle** via
-`unsloth/Qwen2.5-7B-Instruct`. `Qwen/Qwen2.5-3B-Instruct` is the local/dev baseline
-because the user can already run 3B locally. `Qwen/Qwen2.5-0.5B-Instruct` remains
-smoke-test only.
+The flagship Track A2 portfolio run is **Qwen2.5-7B QLoRA on Kaggle** using Unsloth (`unsloth/Qwen2.5-7B-Instruct`), requiring a GPU + Internet connection on Kaggle. `Qwen/Qwen2.5-3B-Instruct` remains the local/dev baseline because the user can already run 3B locally. `Qwen/Qwen2.5-0.5B-Instruct` remains for low-memory smoke-test use only (and should not be used for final portfolio evidence unless only smoke testing).
+
+If out-of-memory (OOM) errors occur with the 7B model, reduce sequence length (e.g., `MAX_SEQ_LENGTH = 1024` or `512`) or use a subset of the dataset (via `TRAIN_SUBSET_SIZE`) before falling back to the 3B model.
 
 Track B real legal corpus governance remains **blocked** for QA, SFT, and RAG.
+
 
 ---
 
@@ -110,14 +107,16 @@ The script will:
 4. The default `BASE_MODEL_NAME` in Section 1 is `unsloth/Qwen2.5-7B-Instruct`.
    Change it only if you intentionally need the 3B local/dev baseline or the 0.5B smoke-test profile.
 5. Run all cells in order:
-   - Section 1: Configuration
-   - Section 2: Dataset Validation (fails closed if safety constraints violated)
-   - Section 3: Data Formatting
-   - Section 4: LoRA/QLoRA Setup
-   - Section 5: Fine-Tuning (synthetic data, Kaggle GPU only)
-   - Section 6: Evaluation (base vs. adapter)
-   - Section 7: Benchmark Export
-   - Section 8: Portfolio Evidence Checklist
+   - Section 1: Kaggle Environment Check
+   - Section 2: Unsloth Installation
+   - Section 3: Configuration
+   - Section 4: Dataset Validation
+   - Section 5: Data Formatting
+   - Section 6: Model Loading and PEFT setup
+   - Section 7: SFT Fine-Tuning
+   - Section 8: Inference & Proxy Evaluation
+   - Section 9: Benchmark Export
+   - Section 10: Portfolio Evidence Checklist
 
 ---
 
@@ -128,12 +127,15 @@ The script will:
 | LoRA adapter files | `/kaggle/working/vilegal-synthetic-demo-adapter/` | Adapter weights from synthetic fine-tuning |
 | Benchmark JSON | `/kaggle/working/track_a_benchmark_results.json` | Base vs adapter comparison on synthetic test set |
 | Training log | Kaggle notebook output | Loss curve and epoch metrics |
-| Screenshots | Manual capture | Portfolio evidence |
+| Dataset validation screenshot | Manual capture | Shows fail-closed validation checks passing |
+| Training completion screenshot | Manual capture | Shows loss curve from SFTTrainer training loop |
+| Adapter output screenshot | Manual capture | Shows saved files in Kaggle working directory |
 
 > [!NOTE]
 > Adapter files are saved to Kaggle's working directory only.
 > They must **NOT** be committed to git.
 > Download them from Kaggle if needed for further local inspection.
+
 
 ---
 

@@ -200,6 +200,20 @@ class TestConfig:
         assert smoke_test.get("expected_location") == "Kaggle or local smoke test"
         assert "smoke test only" in str(smoke_test.get("purpose", ""))
 
+    def test_config_runtime_target_is_kaggle(self):
+        """Test configuration specifies Kaggle as target platform."""
+        cfg = _load_yaml_simple(CONFIG_PATH)
+        runtime = cfg.get("runtime", {})
+        assert isinstance(runtime, dict)
+        assert runtime.get("target_platform") == "kaggle"
+
+    def test_config_local_training_remains_false(self):
+        """Test configuration prohibits local training in runtime config."""
+        cfg = _load_yaml_simple(CONFIG_PATH)
+        runtime = cfg.get("runtime", {})
+        assert isinstance(runtime, dict)
+        assert runtime.get("local_training_allowed") is False
+
 
 # ---------------------------------------------------------------------------
 # Test 6-9: Notebook
@@ -325,6 +339,37 @@ class TestNotebook:
                 pytest.fail(
                     f"Active push_to_hub( found in notebook code cell line: {line!r}"
                 )
+
+    def test_notebook_has_unsloth_runtime_imports_and_calls(self, nb_text):
+        """Test that the notebook imports FastLanguageModel from unsloth."""
+        assert "from unsloth import FastLanguageModel" in nb_text
+
+    def test_notebook_has_fastlanguagemodel_from_pretrained(self, nb_text):
+        """Test that the notebook calls FastLanguageModel.from_pretrained."""
+        assert "FastLanguageModel.from_pretrained(" in nb_text
+
+    def test_notebook_has_load_in_4bit_true(self, nb_text):
+        """Test that the notebook uses 4-bit loading."""
+        assert "load_in_4bit=True" in nb_text
+
+    def test_notebook_has_lora_target_modules(self, nb_text):
+        """Test that the notebook defines LoRA target modules."""
+        assert '"q_proj"' in nb_text
+        assert '"k_proj"' in nb_text
+        assert '"v_proj"' in nb_text
+        assert '"o_proj"' in nb_text
+        assert '"gate_proj"' in nb_text
+        assert '"up_proj"' in nb_text
+        assert '"down_proj"' in nb_text
+
+    def test_notebook_has_sfttrainer(self, nb_text):
+        """Test that the notebook imports and sets up SFTTrainer."""
+        assert "from trl import SFTTrainer" in nb_text
+        assert "SFTTrainer(" in nb_text
+
+    def test_notebook_exports_benchmark_json_path(self, nb_text):
+        """Test that the notebook defines the correct benchmark output path."""
+        assert "/kaggle/working/track_a_benchmark_results.json" in nb_text
 
 
 # ---------------------------------------------------------------------------

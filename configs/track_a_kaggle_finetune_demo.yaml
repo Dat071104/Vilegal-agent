@@ -63,3 +63,11 @@ evaluation:
 
 disclaimer:
   text: "Synthetic demo only. Not legal advice. Not official legal text. Not legal-ground-truth."
+
+runtime:
+  target_platform: "kaggle"
+  require_gpu: true
+  require_internet_for_model_download: true
+  local_training_allowed: false
+  output_adapter_dir: "/kaggle/working/vilegal-synthetic-demo-adapter"
+  benchmark_output: "/kaggle/working/track_a_benchmark_results.json"

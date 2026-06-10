@@ -11,13 +11,13 @@ Show a complete AI engineering demo path that includes synthetic dataset design,
 - Larger local synthetic artifact generation path under `artifacts/`.
 - Portfolio screenshots of dataset rows, validation output, and demo workflow.
 - README section describing Track A mechanics and Track B governance separation.
-- **Track A2:** Kaggle synthetic fine-tune demo notebook, dataset packaging script, validator, tests, and docs.
-  - Synthetic fine-tune of `unsloth/Qwen2.5-7B-Instruct` as the flagship Kaggle portfolio run.
-  - `Qwen/Qwen2.5-3B-Instruct` retained as the local/dev baseline because the user can run 3B locally.
-  - `Qwen/Qwen2.5-0.5B-Instruct` retained only for smoke testing.
+- **Track A2 / A2.2:** Kaggle synthetic fine-tune demo notebook using Unsloth 7B QLoRA runtime, dataset packaging script, validator, tests, and docs.
+  - Flagship portfolio run uses `unsloth/Qwen2.5-7B-Instruct` on Kaggle with GPU + Internet.
+  - `Qwen/Qwen2.5-3B-Instruct` remains the local/dev baseline because the user can run 3B locally.
+  - `Qwen/Qwen2.5-0.5B-Instruct` is for smoke testing only.
   - Benchmark comparison: base vs LoRA adapter on synthetic test set.
-  - Screenshot evidence from Kaggle notebook run.
-  - Benchmark JSON exported from `/kaggle/working/`.
+  - Screenshot evidence from Kaggle notebook run (validation, training logs, adapter files, benchmark JSON).
+  - Benchmark JSON exported from `/kaggle/working/track_a_benchmark_results.json`.
   - `SYNTHETIC DEMO ONLY — NOT LEGAL ADVICE` disclaimer on all outputs.
 
 ## Suggested README screenshots section
@@ -42,6 +42,7 @@ Show a complete AI engineering demo path that includes synthetic dataset design,
 - Built a fail-closed synthetic data generation and validation pipeline for a Vietnamese legal AI portfolio demo, with explicit separation from real-corpus governance work.
 - Added offline-safe CLI tooling, JSONL schema validation, and branch-isolated Track A documentation for synthetic-only QA dataset creation.
 - Designed a two-track repository workflow separating synthetic AI engineering demos from legal data governance and readiness auditing.
+- Implemented a Kaggle-only Unsloth QLoRA 7B runtime patch for flagship model fine-tuning with full offline/static validation constraints.
 
 ## Clear disclaimer wording
 

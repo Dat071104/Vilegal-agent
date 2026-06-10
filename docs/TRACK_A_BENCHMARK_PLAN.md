@@ -37,7 +37,8 @@ Evaluation uses a random sample of 50 rows from the 250-row test split (configur
 
 | Step | Description |
 |---|---|
-| 1. Load base model | Load `unsloth/Qwen2.5-7B-Instruct` for the flagship Kaggle run. Use `Qwen/Qwen2.5-3B-Instruct` only as the local/dev baseline or `Qwen/Qwen2.5-0.5B-Instruct` for smoke tests. |
+| 1. Load base model | Load `unsloth/Qwen2.5-7B-Instruct` via Unsloth `FastLanguageModel.from_pretrained` (requires Kaggle GPU + Internet). Use `Qwen/Qwen2.5-3B-Instruct` as local/dev baseline. Use `Qwen/Qwen2.5-0.5B-Instruct` for low-memory smoke tests only. |
+| 1a. OOM Mitigation | If OOM occurs during 7B run, reduce sequence length or subset size before falling back to 3B. Do not use 0.5B for final portfolio evidence. |
 | 2. Evaluate base | Run inference on `EVAL_SAMPLE_SIZE` test rows using inference-style prompts. |
 | 3. Load adapter | Load the LoRA adapter from `/kaggle/working/vilegal-synthetic-demo-adapter/`. |
 | 4. Evaluate adapter | Run inference on the same rows with the adapter applied. |
