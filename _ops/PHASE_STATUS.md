@@ -1,7 +1,7 @@
 # Phase Status
 
-**Current phase:** Phase 2J - Review Results Import + Human Label Quality Audit  
-**Current verdict:** PASS WITH RISKS
+**Current phase:** Phase 2M - Full Phase 3 Readiness Audit  
+**Current verdict:** PHASE 3 READY FOR SCAFFOLD ONLY
 
 ## Phase gates
 
@@ -297,3 +297,100 @@
 - **Phase 2L and Phase 2M remain required before any Phase 3 scaffold or training decision.**
 - **Phase 2K is not started.**
 - **Phase 3 remains blocked. Stop here unless explicitly instructed to continue later.**
+
+## Phase 2K - Reviewed Corpus Candidate Manifest
+
+**Date:** 2026-06-10
+**Verdict:** PASS WITH RISKS
+
+- Added deterministic corpus-candidate manifest tooling for the Phase 2J
+  accepted sample subset only.
+- Current local Phase 2K manifest run:
+  - `accepted_candidate_ids_input_count = 150`
+  - `manifest_records_written = 150`
+  - `missing_review_metadata_count = 0`
+  - `missing_filter_metadata_count = 0`
+  - `rejected_from_manifest_count = 0`
+  - `unresolved_from_manifest_count = 0`
+  - `unique_parent_documents = 128`
+  - `unique_source_ids = 128`
+  - `decision_counts = {"accept_for_later_corpus_candidate": 150}`
+  - `confidence_counts = {"medium": 150}`
+  - `legal_ground_truth_true_count = 0`
+  - `rag_index_approved_true_count = 0`
+  - `qa_generation_approved_true_count = 0`
+  - `fine_tuning_approved_true_count = 0`
+  - `phase3_ready_true_count = 0`
+- Every manifest record remains constrained to:
+  - `review_scope = phase_2h_sample_only`
+  - `approval_scope = later_corpus_candidate_review_only`
+  - `is_legal_ground_truth = false`
+  - `approved_for_rag_index = false`
+  - `approved_for_qa_generation = false`
+  - `approved_for_fine_tuning = false`
+  - `phase3_ready = false`
+- Interpretation:
+  - the manifest is structurally valid for later review planning only;
+  - the reviewed set still covers the Phase 2H sample only;
+  - no corpus-wide approval exists;
+  - no QA, fine-tuning, or RAG approval exists.
+- **Next allowed phase: Phase 2L - SFT/RAG Readiness Gate.**
+- **Phase 3 remains blocked.**
+
+## Phase 2L - SFT/RAG Readiness Gate
+
+**Date:** 2026-06-10
+**Verdict:** PASS WITH RISKS
+
+- Added a deterministic readiness gate for the Phase 2K manifest and the
+  Phase 2J/2K limitation docs.
+- Current local Phase 2L gate output:
+  - `corpus_candidate_manifest_ready = true`
+  - `qa_generation_ready = false`
+  - `fine_tuning_ready = false`
+  - `rag_indexing_ready = false`
+  - `phase3_scaffold_ready = true`
+  - `readiness_verdict = PASS WITH RISKS`
+- Supporting checks:
+  - `accepted_candidate_count = 150`
+  - `unique_parent_documents = 128`
+  - `provenance_coverage = 1.0`
+  - `attribution_docs_present = true`
+  - `data_use_policy_present = true`
+  - `license_fields_present = true`
+  - `legal_ground_truth_true_count = 0`
+  - `rag_index_approved_true_count = 0`
+  - `qa_generation_approved_true_count = 0`
+  - `fine_tuning_approved_true_count = 0`
+  - `phase3_ready_true_count = 0`
+  - `review_coverage_limitation_documented = true`
+  - `bulk_review_limitation_documented = true`
+- Interpretation:
+  - scaffold planning is safe;
+  - actual QA generation remains blocked;
+  - actual fine-tuning remains blocked;
+  - actual RAG indexing remains blocked.
+- **Next allowed phase: Phase 2M - Full Phase 3 Readiness Audit.**
+- **Phase 3 execution remains blocked.**
+
+## Phase 2M - Full Phase 3 Readiness Audit
+
+**Date:** 2026-06-10
+**Verdict:** PHASE 3 READY FOR SCAFFOLD ONLY
+
+- Final audit confirms:
+  - Phase 2K manifest exists and is valid.
+  - Phase 2L scaffold-planning gate passed with risks.
+  - QA generation remains blocked.
+  - Fine-tuning remains blocked.
+  - RAG indexing remains blocked.
+  - sample-scope limitations remain explicit.
+  - artifact hygiene remains intact.
+- Current final boundary:
+  - allowed next step is **Phase 3A Kaggle/QLoRA scaffold only**
+  - notebook/config/docs planning is allowed
+  - actual training is not allowed
+  - actual QA generation is not allowed
+  - actual vector/RAG indexing is not allowed
+  - dataset publication is not allowed
+- **Phase 3 is not ready for execution.**

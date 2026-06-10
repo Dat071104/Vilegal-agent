@@ -253,4 +253,46 @@ No Phase 2 implementation work was started in this audit turn.
 
 **Phase 2J result:** PASS WITH RISKS
 
+## Phase 2K - Reviewed Corpus Candidate Manifest (2026-06-10)
+
+| Step | Time | Action | Status |
+|---|---|---|---|
+| 1 | 2026-06-10T12:05 | Re-ran the Phase 2J checkpoint and confirmed the completed sample review CSV still validates and audits cleanly before starting Phase 2K. | PASS |
+| 2 | 2026-06-10T12:12 | Added `src/vilegal/ingestion/corpus_manifest.py` to deterministically merge accepted Phase 2J IDs with Phase 2H review metadata and Phase 2G filter provenance while forcing all downstream approval flags to `false`. | PASS |
+| 3 | 2026-06-10T12:13 | Added `scripts/build_corpus_candidate_manifest.py` with artifacts-only path enforcement and fail-closed handling for missing accepted-ID or review metadata inputs. | PASS |
+| 4 | 2026-06-10T12:16 | Added `tests/test_corpus_manifest.py` using synthetic fixtures only for valid manifest builds, fail-closed review mismatches, filter metadata reporting, duplicate accepted IDs, counts reconciliation, and approval-flag safety. | PASS |
+| 5 | 2026-06-10T12:22 | Ran `python -m pytest tests/test_corpus_manifest.py -v` and got `13/13 PASS`. | PASS |
+| 6 | 2026-06-10T12:24 | Ran the first live Phase 2K manifest build and found a bug where missing filter-only version fields incorrectly zeroed manifest output even though the review sample already preserved them. | BUG FOUND |
+| 7 | 2026-06-10T12:27 | Patched Phase 2K so merged review-sample metadata can satisfy `parser_version` and `filter_version` when Phase 2G rows omit those fields directly. Added a regression test for the live failure mode. | PASS |
+| 8 | 2026-06-10T12:28 | Re-ran `python -m pytest tests/test_corpus_manifest.py -v` and kept `13/13 PASS`. | PASS |
+| 9 | 2026-06-10T12:29 | Re-ran `python scripts/build_corpus_candidate_manifest.py --review-audit-dir artifacts/phase_2j_review_results_audit --review-pack-dir artifacts/phase_2h_manual_review_pack --filter-dir artifacts/phase_2g_uts_filtering --output-dir artifacts/phase_2k_corpus_candidate_manifest` and produced `150` manifest rows with zero missing review/filter metadata. | PASS |
+| 10 | 2026-06-10T12:31 | Recorded Phase 2K design, metrics, and scope limits in docs and ops files without approving QA, fine-tuning, RAG, legal ground truth, or Phase 3. | PASS |
+
+**Phase 2K result:** PASS WITH RISKS
+
+## Phase 2L - SFT/RAG Readiness Gate (2026-06-10)
+
+| Step | Time | Action | Status |
+|---|---|---|---|
+| 1 | 2026-06-10T12:40 | Reviewed the Phase 2K manifest outputs plus attribution, data-use, and Phase 2J/2K limitation docs before defining readiness decisions. | PASS |
+| 2 | 2026-06-10T12:43 | Added `src/vilegal/ingestion/readiness_gate.py` to evaluate manifest existence, sample-scope constraints, provenance coverage, downstream safety counts, and documented review limitations. | PASS |
+| 3 | 2026-06-10T12:44 | Added `scripts/check_phase3_readiness.py` with artifacts-only input/output path enforcement and explicit report output for scaffold-only planning. | PASS |
+| 4 | 2026-06-10T12:46 | Added `tests/test_phase3_readiness.py` using synthetic manifests and docs only to cover PASS WITH RISKS, missing-manifest failure, forbidden downstream flags, documentation gaps, and CLI path safety. | PASS |
+| 5 | 2026-06-10T12:47 | Ran `python -m pytest tests/test_phase3_readiness.py -v` and got `6/6 PASS`. | PASS |
+| 6 | 2026-06-10T12:48 | Ran `python scripts/check_phase3_readiness.py --manifest-dir artifacts/phase_2k_corpus_candidate_manifest --report-out artifacts/phase_2l_phase3_readiness_report.json` and got `PASS WITH RISKS` with scaffold planning ready but QA, fine-tuning, and RAG indexing still blocked. | PASS |
+| 7 | 2026-06-10T12:50 | Recorded Phase 2L readiness outputs, remaining blockers, and safety boundaries in docs and ops files without starting Phase 3 execution. | PASS |
+
+**Phase 2L result:** PASS WITH RISKS
+
+## Phase 2M - Full Phase 3 Readiness Audit (2026-06-10)
+
+| Step | Time | Action | Status |
+|---|---|---|---|
+| 1 | 2026-06-10T13:00 | Re-read the current Phase 1 audit posture plus Phase 2E through Phase 2L docs, metrics, and safety constraints before the final readiness verdict. | PASS |
+| 2 | 2026-06-10T13:05 | Created `docs/PHASE_2M_PHASE3_READINESS_AUDIT.md` to summarize source/license posture, ingestion status, review scope limits, readiness outputs, artifact hygiene, and the final Phase 3 decision. | PASS |
+| 3 | 2026-06-10T13:08 | Updated `docs/PHASE_2_PRE_AUDIT.md`, `docs/ROADMAP.md`, `README.md`, `_ops/IMPLEMENTATION_LOG.md`, `_ops/PHASE_STATUS.md`, and `_ops/RISK_REGISTER.md` so the repo status consistently allows scaffold planning only and still blocks QA, fine-tuning, and RAG indexing. | PASS |
+| 4 | 2026-06-10T13:10 | Confirmed the final audit verdict: `PHASE 3 READY FOR SCAFFOLD ONLY`, with the next allowed step restricted to Phase 3A Kaggle/QLoRA scaffold work only. | PASS |
+
+**Phase 2M result:** PHASE 3 READY FOR SCAFFOLD ONLY
+
 

@@ -146,4 +146,55 @@ These metrics must be measured before any bulk ingestion is approved:
   - Next allowed phase: **Phase 2K - Reviewed Corpus Candidate Manifest**.
   - Phase 2L and Phase 2M are still required before any Phase 3 scaffold or training decision.
   - Phase 3 remains blocked.
+- Phase 2K implementation: **COMPLETE - PASS WITH RISKS**
+  - Deterministic manifest tooling now materializes the reviewed Phase 2H sample subset accepted by the Phase 2J audit.
+  - Current local run results: `150` accepted input rows, `150` manifest rows written, `128` unique parent documents, `128` unique source IDs.
+  - All downstream safety flags remain forced to `false`:
+    - `legal_ground_truth_true_count = 0`
+    - `rag_index_approved_true_count = 0`
+    - `qa_generation_approved_true_count = 0`
+    - `fine_tuning_approved_true_count = 0`
+    - `phase3_ready_true_count = 0`
+  - The manifest remains sample-scope only:
+    - `review_scope = phase_2h_sample_only`
+    - `approval_scope = later_corpus_candidate_review_only`
+  - The Phase 2K verdict remains `PASS WITH RISKS` because the reviewed set is still sample-scope only and does not approve Phase 3 work by itself.
+  - Next required phase: **Phase 2L - SFT/RAG Readiness Gate**.
+  - Phase 3 remains blocked.
+- Phase 2L implementation: **COMPLETE - PASS WITH RISKS**
+  - The readiness gate confirms the Phase 2K manifest is structurally valid for scaffold planning only.
+  - Current local gate results:
+    - `corpus_candidate_manifest_ready = true`
+    - `phase3_scaffold_ready = true`
+    - `qa_generation_ready = false`
+    - `fine_tuning_ready = false`
+    - `rag_indexing_ready = false`
+  - Detailed checks currently pass:
+    - `accepted_candidate_count = 150`
+    - `unique_parent_documents = 128`
+    - `provenance_coverage = 1.0`
+    - attribution and data-use docs are present
+    - sample-scope and bulk-review limitations are documented
+  - Phase 2L still blocks downstream execution:
+    - no QA generation
+    - no fine-tuning
+    - no RAG indexing
+  - Next required phase: **Phase 2M - Full Phase 3 Readiness Audit**.
+  - Phase 3 remains blocked for execution.
+- Phase 2M implementation: **COMPLETE - PHASE 3 READY FOR SCAFFOLD ONLY**
+  - The final readiness audit confirms the current project may proceed only to Phase 3A scaffold planning.
+  - Current final interpretation:
+    - Phase 2K manifest exists and is valid.
+    - Phase 2L marks scaffold planning as safe.
+    - QA generation remains blocked.
+    - Fine-tuning remains blocked.
+    - RAG indexing remains blocked.
+  - Allowed next step:
+    - **Phase 3A Kaggle/QLoRA scaffold only**
+  - Still not allowed:
+    - actual training
+    - QA generation
+    - vector/RAG index construction
+    - dataset publication
+  - Full-corpus review and later downstream gates are still required before any real Phase 3 execution.
 
