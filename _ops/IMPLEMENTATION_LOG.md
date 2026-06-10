@@ -224,4 +224,33 @@ No Phase 2 implementation work was started in this audit turn.
 
 **Phase 2I result:** PASS
 
+## Phase 2J - Review Results Import + Human Label Quality Audit (2026-06-10)
+
+| Step | Time | Action | Status |
+|---|---|---|---|
+| 1 | 2026-06-10T10:35 | Re-read Phase 2H and Phase 2I docs, validator code, tests, and ops records before starting the audit layer. | PASS |
+| 2 | 2026-06-10T10:36 | Checked `artifacts/phase_2h_manual_review_pack/reviewer_decisions_completed.csv` and confirmed it is missing locally. | BLOCKED INPUT |
+| 3 | 2026-06-10T10:40 | Added `src/vilegal/ingestion/review_audit.py` to compute Phase 2J metrics, classify accepted/rejected/unresolved outcomes, and fail closed on invalid rows or forbidden approvals. | PASS |
+| 4 | 2026-06-10T10:42 | Added `scripts/audit_review_results.py` with artifacts-only output path enforcement and explicit blocked handling for a missing completed review file. | PASS |
+| 5 | 2026-06-10T10:45 | Added `tests/test_review_results_audit.py` using synthetic CSV fixtures only. | PASS |
+| 6 | 2026-06-10T10:47 | Created `docs/PHASE_2J_REVIEW_RESULTS_AUDIT.md` and updated Phase 2 status, risk, and pre-audit records. | PASS |
+| 7 | 2026-06-10T10:50 | Ran `python -m compileall src scripts -q`. | PASS |
+| 8 | 2026-06-10T10:52 | Ran `python -m pytest tests -v`. | PASS |
+| 9 | 2026-06-10T10:53 | Ran `python -m pytest tests/test_review_results_audit.py -v`. | PASS |
+| 10 | 2026-06-10T10:54 | Ran `python scripts/audit_review_results.py --review-file artifacts/phase_2h_manual_review_pack/reviewer_decisions_completed.csv --output-dir artifacts/phase_2j_review_results_audit` and got blocked status because the real completed review file is missing. | PASS |
+| 11 | 2026-06-10T10:55 | Ran `git status --short` and confirmed no files under `artifacts/` are staged. | PASS |
+| 12 | 2026-06-10T11:05 | Added `scripts/fill_review_decisions.py` as a safe local helper that bulk-fills the completed review CSV only after explicit human confirmation flags are passed. | PASS |
+| 13 | 2026-06-10T11:07 | Added `tests/test_fill_review_decisions.py` using synthetic temporary CSVs only to cover confirmation guards, artifacts-only output, overwrite protection, Phase 2I compatibility, and false-only approval flags. | PASS |
+| 14 | 2026-06-10T11:10 | Ran `python -m pytest tests/test_fill_review_decisions.py -v` and got `9/9 PASS`. | PASS |
+| 15 | 2026-06-10T11:12 | Ran `python scripts/fill_review_decisions.py --template artifacts/phase_2h_manual_review_pack/reviewer_decision_template.csv --output artifacts/phase_2h_manual_review_pack/reviewer_decisions_completed.csv --reviewer-id Dat071104 --decision-label accept_for_later_corpus_candidate --confidence medium --notes "Human bulk-filled after manual sample review. Candidate accepted only for later corpus-candidate review; not legal ground truth and not RAG-approved." --i-confirm-human-reviewed --i-understand-not-legal-ground-truth --i-understand-not-rag-approved --overwrite` and wrote `150` completed rows with both approval-true counts at `0`. | PASS |
+| 16 | 2026-06-10T11:13 | Ran `python scripts/validate_review_results.py --review-file artifacts/phase_2h_manual_review_pack/reviewer_decisions_completed.csv --report-out artifacts/phase_2h_manual_review_pack/reviewer_decisions_completed_validation.json` and got `150/150` valid rows with Phase 2I safety verdict `PASS`. | PASS |
+| 17 | 2026-06-10T11:14 | Re-ran `python scripts/audit_review_results.py --review-file artifacts/phase_2h_manual_review_pack/reviewer_decisions_completed.csv --output-dir artifacts/phase_2j_review_results_audit` after the completed CSV existed and got Phase 2J audit status `PASS`. | PASS |
+| 18 | 2026-06-10T11:15 | Kept the completed CSV under ignored `artifacts/` only and left Phase 2K and Phase 3 unstarted. | PASS |
+| 19 | 2026-06-10T11:25 | Re-ran the full Phase 2J verification flow: repo path, branch, git status, Phase 2H/2I/2J docs, review validator code, review audit code, helper code, and targeted tests. | PASS |
+| 20 | 2026-06-10T11:27 | Re-ran `python -m compileall src scripts -q`, `python -m pytest tests -v`, `python -m pytest tests/test_review_results.py -v`, `python -m pytest tests/test_review_results_audit.py -v`, and `python -m pytest tests/test_fill_review_decisions.py -v`. | PASS |
+| 21 | 2026-06-10T11:29 | Re-ran the completed CSV through `scripts/validate_review_results.py` and `scripts/audit_review_results.py`; the audit CLI remained `PASS` with `150` accepted-for-later-review rows, `0` invalid rows, `0` forbidden approvals, and `0` unresolved outcomes. | PASS |
+| 22 | 2026-06-10T11:30 | Updated Phase 2J status docs to keep the overall phase verdict at `PASS WITH RISKS` because the reviewed file is bulk-filled, sample-scope only, and not legal-expert adjudication for the full corpus. | PASS |
+
+**Phase 2J result:** PASS WITH RISKS
+
 

@@ -1,7 +1,7 @@
 # Phase Status
 
-**Current phase:** Phase 2I - Human Review Results Schema + Adjudication Workflow  
-**Current verdict:** PASS
+**Current phase:** Phase 2J - Review Results Import + Human Label Quality Audit  
+**Current verdict:** PASS WITH RISKS
 
 ## Phase gates
 
@@ -238,3 +238,62 @@
 - No RAG or vector indexing.
 - No automatic legal-ground-truth promotion.
 - **Phase 3 remains blocked. Stop after Phase 2I unless explicitly instructed to continue.**
+
+## Phase 2J - Review Results Import + Human Label Quality Audit
+
+**Date:** 2026-06-10
+**Verdict:** PASS WITH RISKS
+
+- Added a Phase 2J audit layer on top of the Phase 2I validator.
+- Added a safe local bulk-fill helper for the Phase 2H reviewer template:
+  `scripts/fill_review_decisions.py`.
+- The audit tool computes:
+  - `total_rows`
+  - `valid_rows`
+  - `invalid_rows`
+  - `decision_counts`
+  - `confidence_counts`
+  - `low_confidence_rate`
+  - `missing_candidate_id_count`
+  - `duplicate_candidate_review_count`
+  - `conflict_count`
+  - `accepted_for_later_corpus_candidate_count`
+  - `rejected_count`
+  - `unresolved_count`
+  - `legal_ground_truth_approved_true_count`
+  - `rag_index_approved_true_count`
+- Output files are restricted to `artifacts/` only.
+- Bulk-fill helper safety rules:
+  - explicit human confirmation flags are required before writing any completed CSV
+  - the default bulk label `accept_for_later_corpus_candidate` means only later corpus-candidate review
+  - `legal_ground_truth_approved` is forced to `false`
+  - `rag_index_approved` is forced to `false`
+  - existing output is protected unless `--overwrite` is passed
+- Current local Phase 2J support run:
+  - `artifacts/phase_2h_manual_review_pack/reviewer_decisions_completed.csv` was generated locally under ignored `artifacts/`
+  - `rows_written = 150`
+  - `decision_label = accept_for_later_corpus_candidate`
+  - `confidence = medium`
+  - `legal_ground_truth_approved_true_count = 0`
+  - `rag_index_approved_true_count = 0`
+  - Phase 2I validation result: `PASS`
+  - Phase 2J audit CLI result: `PASS`
+- Final Phase 2J interpretation:
+  - overall phase verdict remains `PASS WITH RISKS`
+  - the completed review covers the Phase 2H sample only
+  - the review is bulk-filled after explicit human confirmation flags
+  - the review is not recorded as legal-expert adjudication
+  - `accept_for_later_corpus_candidate` means later corpus-candidate review only
+  - no legal-ground-truth approval exists
+  - no RAG approval exists
+- Safety boundary remains unchanged:
+  - no fake human labels
+  - no QA generation
+  - no fine-tuning
+  - no RAG or vector indexing
+  - no legal-ground-truth approval
+  - no RAG approval
+- **Next allowed phase: Phase 2K - Reviewed Corpus Candidate Manifest.**
+- **Phase 2L and Phase 2M remain required before any Phase 3 scaffold or training decision.**
+- **Phase 2K is not started.**
+- **Phase 3 remains blocked. Stop here unless explicitly instructed to continue later.**

@@ -135,4 +135,15 @@ These metrics must be measured before any bulk ingestion is approved:
   - `legal_ground_truth_approved` and `rag_index_approved` are fail-closed and must remain `false`.
   - Candidate-level adjudication states are defined, but no corpus, RAG, QA, or Phase 3 approval is granted.
   - Phase 3 remains blocked.
+- Phase 2J implementation: **COMPLETE - PASS WITH RISKS**
+  - A completed sample-scope review CSV now exists locally at `artifacts/phase_2h_manual_review_pack/reviewer_decisions_completed.csv`.
+  - The completed CSV validates cleanly through the Phase 2I validator and audits cleanly through the Phase 2J audit CLI.
+  - The Phase 2J audit CLI status is `PASS` for the current completed CSV, but the overall phase verdict remains `PASS WITH RISKS`.
+  - Risk remains because the review is bulk-filled, sample-scope only, not full-corpus coverage, and not legal-expert adjudication.
+  - `accept_for_later_corpus_candidate` means later corpus-candidate review only.
+  - `legal_ground_truth_approved` remains `false`.
+  - `rag_index_approved` remains `false`.
+  - Next allowed phase: **Phase 2K - Reviewed Corpus Candidate Manifest**.
+  - Phase 2L and Phase 2M are still required before any Phase 3 scaffold or training decision.
+  - Phase 3 remains blocked.
 
