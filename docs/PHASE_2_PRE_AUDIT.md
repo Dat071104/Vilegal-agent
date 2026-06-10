@@ -1,8 +1,8 @@
 # Phase 2 Pre-Audit
 
-**Date:** 2026-06-09  
-**Status:** PRE-AUDIT ONLY  
-**Implementation status:** Not started
+**Date:** 2026-06-09
+**Status:** HISTORICAL PRE-AUDIT
+**Implementation status:** Superseded by Phases 2A through 2G. Sample-only ingestion scaffold, parser candidates, and filtering rules are now implemented. Offline fixture dry-run: PASS.
 
 ## Objective
 
@@ -93,6 +93,108 @@ These metrics must be measured before any bulk ingestion is approved:
 
 ## Recommendation
 
-- Phase 2 bulk download: **NO-GO**
-- Phase 2 sample-only ingestion planning: **GO**
-- Phase 2 implementation: **DO NOT START YET**
+- Phase 2A sample-only scaffold: **COMPLETE — PASS**
+- Phase 2B online smoke test: **COMPLETE — PASS WITH DISCOVERIES**
+  - UTS_VLC: 10/10 normalized, quality gate PASS. Uses year-based splits (e.g. `2026`), not `train`.
+  - duyet/vietnamese-legal-instruct: 10/10 normalized after conversations-format normalizer fix. CC-BY-4.0 attribution confirmed and preserved.
+  - th1nhng0/vietnamese-legal-documents: DEFERRED (not required to attempt; resources saved).
+- Phase 2C human gate pack: **COMPLETE — PASS**
+  - Documents created: `ATTRIBUTION.md`, `DATA_USE_POLICY.md`, `BULK_INGESTION_GATE.md`.
+- Phase 2 bulk download: **NO-GO** (unchanged)
+- Phase 2D implementation: **COMPLETE — PASS WITH RISKS**. Controlled pilot successfully pulled `uts_vlc` and `duyet_legal_instruct` up to 1000 records. `th1nhng0_legal_documents` deferred due to HF dataset config issues. No generated data tracked.
+- Phase 2E implementation: **COMPLETE - PASS WITH RISKS**
+  - `UTS_VLC`: content is viable as a document-level legal corpus candidate only. Current normalized output does not preserve article-level metadata.
+  - `duyet_legal_instruct`: normalized `text` correctly remains the user query; assistant answers remain in `raw_metadata` only. This source is still generated supervision, not legal ground truth.
+  - Downstream readiness:
+    - RAG corpus readiness: `PASS WITH RISKS` for `UTS_VLC` only
+    - SFT dataset readiness: `BLOCKED`
+    - Evaluation dataset readiness: `BLOCKED`
+    - Public release readiness: `BLOCKED`
+  - Phase 3: **DO NOT START**.
+- Phase 2F implementation: **COMPLETE - PASS WITH RISKS**
+  - Secondary parser created for existing document-level `UTS_VLC` outputs only.
+  - Derived article/chunk records are parser candidates only, not legal ground truth.
+  - All derived candidates are marked `approved_for_rag_index=false`.
+  - Measured run results: `20,393` candidates, `490` duplicate text hashes, `87` suspicious-length candidates, `299` preamble warnings.
+  - Recommendation: proceed only to Phase 2G filtering rules. Phase 3 remains blocked.
+- Phase 2G implementation: **COMPLETE - PASS WITH RISKS**
+  - Deterministic review-labeling layer created for Phase 2F candidates.
+  - No candidate is approved for RAG or marked as legal ground truth.
+  - Measured run results: `20,393` inputs, `511` rejected, `3,249` needs review, `16,633` keep candidates, `339` duplicate hash groups, `490` duplicate candidates rejected, `87` suspicious-length candidates.
+  - Parent document warnings are preserved as metadata only and do not automatically force `needs_review`.
+  - Phase 3 remains blocked.
+- Phase 2H implementation: **COMPLETE - PASS WITH RISKS**
+  - Deterministic manual-review sampling pack created from the existing Phase 2G outputs only.
+  - Measured run results: `150` sampled rows, `128` parent documents covered, full bucket coverage with no shortfall, `approved_for_rag_index_true_count = 0`, `is_legal_ground_truth_true_count = 0`.
+  - Review outputs remain under ignored `artifacts/` only.
+  - Human review is still required before any later corpus-candidate gate.
+  - Phase 3 remains blocked.
+- Phase 2I implementation: **COMPLETE - PASS**
+  - Human-review results schema and validator created for the Phase 2H reviewer template.
+  - Accepted decision labels and confidence values are now enforced centrally.
+  - `legal_ground_truth_approved` and `rag_index_approved` are fail-closed and must remain `false`.
+  - Candidate-level adjudication states are defined, but no corpus, RAG, QA, or Phase 3 approval is granted.
+  - Phase 3 remains blocked.
+- Phase 2J implementation: **COMPLETE - PASS WITH RISKS**
+  - A completed sample-scope review CSV now exists locally at `artifacts/phase_2h_manual_review_pack/reviewer_decisions_completed.csv`.
+  - The completed CSV validates cleanly through the Phase 2I validator and audits cleanly through the Phase 2J audit CLI.
+  - The Phase 2J audit CLI status is `PASS` for the current completed CSV, but the overall phase verdict remains `PASS WITH RISKS`.
+  - Risk remains because the review is bulk-filled, sample-scope only, not full-corpus coverage, and not legal-expert adjudication.
+  - `accept_for_later_corpus_candidate` means later corpus-candidate review only.
+  - `legal_ground_truth_approved` remains `false`.
+  - `rag_index_approved` remains `false`.
+  - Next allowed phase: **Phase 2K - Reviewed Corpus Candidate Manifest**.
+  - Phase 2L and Phase 2M are still required before any Phase 3 scaffold or training decision.
+  - Phase 3 remains blocked.
+- Phase 2K implementation: **COMPLETE - PASS WITH RISKS**
+  - Deterministic manifest tooling now materializes the reviewed Phase 2H sample subset accepted by the Phase 2J audit.
+  - Current local run results: `150` accepted input rows, `150` manifest rows written, `128` unique parent documents, `128` unique source IDs.
+  - All downstream safety flags remain forced to `false`:
+    - `legal_ground_truth_true_count = 0`
+    - `rag_index_approved_true_count = 0`
+    - `qa_generation_approved_true_count = 0`
+    - `fine_tuning_approved_true_count = 0`
+    - `phase3_ready_true_count = 0`
+  - The manifest remains sample-scope only:
+    - `review_scope = phase_2h_sample_only`
+    - `approval_scope = later_corpus_candidate_review_only`
+  - The Phase 2K verdict remains `PASS WITH RISKS` because the reviewed set is still sample-scope only and does not approve Phase 3 work by itself.
+  - Next required phase: **Phase 2L - SFT/RAG Readiness Gate**.
+  - Phase 3 remains blocked.
+- Phase 2L implementation: **COMPLETE - PASS WITH RISKS**
+  - The readiness gate confirms the Phase 2K manifest is structurally valid for scaffold planning only.
+  - Current local gate results:
+    - `corpus_candidate_manifest_ready = true`
+    - `phase3_scaffold_ready = true`
+    - `qa_generation_ready = false`
+    - `fine_tuning_ready = false`
+    - `rag_indexing_ready = false`
+  - Detailed checks currently pass:
+    - `accepted_candidate_count = 150`
+    - `unique_parent_documents = 128`
+    - `provenance_coverage = 1.0`
+    - attribution and data-use docs are present
+    - sample-scope and bulk-review limitations are documented
+  - Phase 2L still blocks downstream execution:
+    - no QA generation
+    - no fine-tuning
+    - no RAG indexing
+  - Next required phase: **Phase 2M - Full Phase 3 Readiness Audit**.
+  - Phase 3 remains blocked for execution.
+- Phase 2M implementation: **COMPLETE - PHASE 3 READY FOR SCAFFOLD ONLY**
+  - The final readiness audit confirms the current project may proceed only to Phase 3A scaffold planning.
+  - Current final interpretation:
+    - Phase 2K manifest exists and is valid.
+    - Phase 2L marks scaffold planning as safe.
+    - QA generation remains blocked.
+    - Fine-tuning remains blocked.
+    - RAG indexing remains blocked.
+  - Allowed next step:
+    - **Phase 3A Kaggle/QLoRA scaffold only**
+  - Still not allowed:
+    - actual training
+    - QA generation
+    - vector/RAG index construction
+    - dataset publication
+  - Full-corpus review and later downstream gates are still required before any real Phase 3 execution.
+

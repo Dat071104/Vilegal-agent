@@ -1,5 +1,7 @@
 # Planned Architecture
 
+This is the original aspirational architecture. The current audited repo intentionally stops before QA generation, fine-tuning, RAG/vector indexing, and deployment; those phases remain blocked.
+
 The planned architecture for the ViLegal Agent is as follows:
 
 1.  **Data Pipeline:**
