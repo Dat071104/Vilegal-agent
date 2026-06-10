@@ -1,0 +1,52 @@
+track: "A"
+phase: "A2"
+name: "Kaggle Synthetic Fine-Tune Demo"
+mode: "synthetic_finetune_demo"
+
+safety:
+  use_real_legal_corpus: false
+  use_uts_vlc_candidates: false
+  use_corpus_candidate_manifest: false
+  mark_as_legal_ground_truth: false
+  approved_for_rag_index: false
+  allow_local_training: false
+  allow_kaggle_training: true
+  allow_model_download_on_kaggle: true
+  allow_hub_push_by_default: false
+  require_synthetic_label: true
+  require_disclaimer: true
+
+dataset:
+  source: "synthetic-demo"
+  local_split_dir: "artifacts/track_a_synthetic_demo/splits"
+  kaggle_input_dir: "/kaggle/input/vilegal-synthetic-demo"
+  train_file: "train.jsonl"
+  validation_file: "validation.jsonl"
+  test_file: "test.jsonl"
+  expected_train_rows: 2000
+  expected_validation_rows: 250
+  expected_test_rows: 250
+
+model:
+  base_model_name: "Qwen/Qwen2.5-0.5B-Instruct"
+  note: "Small instruct model selected for Kaggle demo constraints. User may change before running."
+  use_lora: true
+  use_qlora_if_available: true
+  push_to_hub: false
+
+training:
+  output_dir: "/kaggle/working/vilegal-synthetic-demo-adapter"
+  num_train_epochs: 1
+  max_steps: null
+  learning_rate: 0.0002
+  train_batch_size: 1
+  gradient_accumulation_steps: 8
+  max_seq_length: 1024
+
+evaluation:
+  benchmark_output: "/kaggle/working/track_a_benchmark_results.json"
+  compare_base_vs_adapter: true
+  sample_size: 50
+
+disclaimer:
+  text: "Synthetic demo only. Not legal advice. Not official legal text. Not legal-ground-truth."
